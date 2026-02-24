@@ -36,9 +36,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "assets/icon.png",
-      "uninstallerIcon": "assets/icon.png"
+      "allowToChangeInstallationDirectory": true
     },
     "mac": {
       "target": [
