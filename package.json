@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Multi-messenger app - Manage unlimited social media accounts in one secure, lightweight desktop app",
   "main": "dist/main/main.js",
-  "author": "Rijanara",
+  "author": {
+    "name": "Rijanara",
+    "email": "teguhrijanandi02@gmail.com"
+  },
   "license": "MIT",
   "homepage": "https://github.com/rijanara/rijanbox",
   "scripts": {
