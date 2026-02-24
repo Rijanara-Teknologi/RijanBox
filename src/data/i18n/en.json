@@ -51,6 +51,7 @@
         "about": "About",
         "language": "Language",
         "theme": "Theme",
+        "colorTheme": "Color Theme",
         "themeLight": "Light",
         "themeDark": "Dark",
         "themeAuto": "Auto (System)",

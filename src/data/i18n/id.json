@@ -51,6 +51,7 @@
         "about": "Tentang",
         "language": "Bahasa",
         "theme": "Tema",
+        "colorTheme": "Warna Tema",
         "themeLight": "Terang",
         "themeDark": "Gelap",
         "themeAuto": "Otomatis (Sistem)",

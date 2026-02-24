@@ -18,6 +18,7 @@ interface ServiceData {
 interface SettingsData {
     language: 'id' | 'en';
     theme: 'light' | 'dark' | 'auto';
+    colorTheme: string;
     autoStart: boolean;
     startMinimized: boolean;
     autoLockMinutes: number;
@@ -41,6 +42,7 @@ const DEFAULTS: StoreSchema = {
     settings: {
         language: 'id',
         theme: 'auto',
+        colorTheme: 'blue',
         autoStart: false,
         startMinimized: false,
         autoLockMinutes: 5,

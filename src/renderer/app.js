@@ -36,6 +36,7 @@
         settings = await window.rijanbox.settings.get();
         await loadLanguage(settings.language || 'id');
         applyTheme(settings.theme || 'auto');
+        applyColorTheme(settings.colorTheme || 'blue');
         services = await window.rijanbox.services.getAll();
         activeServiceId = await window.rijanbox.activeService.get();
         await loadCatalog();
@@ -111,6 +112,7 @@
             'label-minimized': 'settings.startMinimized',
             'label-tray': 'settings.closeToTray',
             'label-theme': 'settings.theme',
+            'label-color-theme': 'settings.colorTheme',
             'label-autolock': 'settings.autoLock',
             'label-pin-status': 'settings.security',
             'no-services-text': 'sidebar.noServices',
@@ -189,6 +191,10 @@
         document.querySelectorAll('.theme-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === theme);
         });
+    }
+
+    function applyColorTheme(colorTheme) {
+        document.documentElement.setAttribute('data-color-theme', colorTheme || 'blue');
     }
 
     // ─── Catalog ───
@@ -520,6 +526,9 @@
             btn.classList.toggle('active', btn.dataset.theme === (settings.theme || 'auto'));
         });
 
+        // Color theme dropdown
+        document.getElementById('setting-color-theme').value = settings.colorTheme || 'blue';
+
         updatePinStatusUI();
     }
 
@@ -628,6 +637,13 @@
                 await window.rijanbox.settings.set('theme', theme);
                 applyTheme(theme);
             });
+        });
+
+        // Color Theme
+        document.getElementById('setting-color-theme').addEventListener('change', async (e) => {
+            settings.colorTheme = e.target.value;
+            await window.rijanbox.settings.set('colorTheme', settings.colorTheme);
+            applyColorTheme(settings.colorTheme);
         });
 
         // PIN - Unlock
