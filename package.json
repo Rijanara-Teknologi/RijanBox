@@ -31,18 +31,29 @@
       ],
       "icon": "assets/icon.png"
     },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.png",
+      "uninstallerIcon": "assets/icon.png"
+    },
     "mac": {
       "target": [
         "dmg"
       ],
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "category": "public.app-category.social-networking"
     },
     "linux": {
       "target": [
         "AppImage",
         "deb"
       ],
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "category": "Network;InstantMessaging",
+      "desktop": {
+        "StartupWMClass": "RijanBox"
+      }
     }
   },
   "devDependencies": {
