@@ -1,0 +1,98 @@
+{
+    "app": {
+        "name": "RijanBox",
+        "tagline": "Manage all your social media accounts in one app"
+    },
+    "sidebar": {
+        "services": "Services",
+        "addService": "Add Service",
+        "settings": "Settings",
+        "lock": "Lock App",
+        "noServices": "No services yet.\nClick + to add one."
+    },
+    "catalog": {
+        "title": "Service Catalog",
+        "search": "Search services...",
+        "categories": {
+            "all": "All",
+            "messaging": "Messaging",
+            "social": "Social Media",
+            "email": "Email",
+            "work": "Work",
+            "other": "Other"
+        },
+        "customUrl": "Custom URL",
+        "customUrlPlaceholder": "Enter URL (e.g. https://example.com)",
+        "serviceName": "Service Name",
+        "serviceNamePlaceholder": "Enter service name",
+        "add": "Add",
+        "cancel": "Cancel"
+    },
+    "pin": {
+        "setupTitle": "Create Security PIN",
+        "setupDesc": "Create a 4-8 digit PIN to secure your app",
+        "enterPin": "Enter PIN",
+        "confirmPin": "Confirm PIN",
+        "create": "Create PIN",
+        "unlockTitle": "RijanBox Locked",
+        "unlockDesc": "Enter your PIN to unlock",
+        "unlock": "Unlock",
+        "incorrect": "Incorrect PIN. Try again.",
+        "mismatch": "PINs don't match. Try again.",
+        "skip": "Skip"
+    },
+    "settings": {
+        "title": "Settings",
+        "general": "General",
+        "security": "Security",
+        "appearance": "Appearance",
+        "notifications": "Notifications",
+        "shortcuts": "Shortcuts",
+        "about": "About",
+        "language": "Language",
+        "theme": "Theme",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "themeAuto": "Auto (System)",
+        "autoStart": "Start on login",
+        "startMinimized": "Start minimized",
+        "closeToTray": "Close to system tray",
+        "autoLock": "Auto-lock after",
+        "autoLockNever": "Never",
+        "minutes": "minutes",
+        "pinEnabled": "PIN enabled",
+        "changePin": "Change PIN",
+        "disablePin": "Disable PIN",
+        "enablePin": "Enable PIN",
+        "back": "Back",
+        "version": "Version"
+    },
+    "contextMenu": {
+        "rename": "Rename",
+        "changeIcon": "Change Icon",
+        "mute": "Mute",
+        "unmute": "Unmute",
+        "edit": "Edit",
+        "delete": "Delete",
+        "reload": "Reload",
+        "moveUp": "Move Up",
+        "moveDown": "Move Down",
+        "deleteConfirm": "Are you sure you want to delete this service?"
+    },
+    "iconPicker": {
+        "emoji": "Emoji",
+        "upload": "Upload Image",
+        "uploadText": "Click to select an image"
+    },
+    "shortcuts": {
+        "title": "Keyboard Shortcuts",
+        "lock": "Lock app",
+        "settings": "Open settings",
+        "newService": "Add new service",
+        "search": "Search services",
+        "switchService": "Switch to service 1-9",
+        "toggleMute": "Mute/Unmute active service",
+        "toggleSidebar": "Show/Hide sidebar",
+        "fullscreen": "Toggle fullscreen"
+    }
+}

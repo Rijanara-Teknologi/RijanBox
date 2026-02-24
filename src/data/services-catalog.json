@@ -1,0 +1,314 @@
+[
+    {
+        "name": "WhatsApp",
+        "url": "https://web.whatsapp.com",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Telegram",
+        "url": "https://web.telegram.org",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Discord",
+        "url": "https://discord.com/app",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Slack",
+        "url": "https://app.slack.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Messenger",
+        "url": "https://www.messenger.com",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Instagram",
+        "url": "https://www.instagram.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Twitter / X",
+        "url": "https://x.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Facebook",
+        "url": "https://www.facebook.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/messaging",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Gmail",
+        "url": "https://mail.google.com",
+        "category": "email",
+        "icon": ""
+    },
+    {
+        "name": "Outlook",
+        "url": "https://outlook.live.com",
+        "category": "email",
+        "icon": ""
+    },
+    {
+        "name": "Yahoo Mail",
+        "url": "https://mail.yahoo.com",
+        "category": "email",
+        "icon": ""
+    },
+    {
+        "name": "ProtonMail",
+        "url": "https://mail.proton.me",
+        "category": "email",
+        "icon": ""
+    },
+    {
+        "name": "Signal",
+        "url": "https://signal.org",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Skype",
+        "url": "https://web.skype.com",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Microsoft Teams",
+        "url": "https://teams.microsoft.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Google Chat",
+        "url": "https://chat.google.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Zoom",
+        "url": "https://zoom.us",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Line",
+        "url": "https://line.me",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "WeChat",
+        "url": "https://web.wechat.com",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "Viber",
+        "url": "https://web.viber.com",
+        "category": "messaging",
+        "icon": ""
+    },
+    {
+        "name": "TikTok",
+        "url": "https://www.tiktok.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "YouTube",
+        "url": "https://www.youtube.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Reddit",
+        "url": "https://www.reddit.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Pinterest",
+        "url": "https://www.pinterest.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Tumblr",
+        "url": "https://www.tumblr.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Snapchat",
+        "url": "https://web.snapchat.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Threads",
+        "url": "https://www.threads.net",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Mastodon",
+        "url": "https://mastodon.social",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Bluesky",
+        "url": "https://bsky.app",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Notion",
+        "url": "https://www.notion.so",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Trello",
+        "url": "https://trello.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Asana",
+        "url": "https://app.asana.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Jira",
+        "url": "https://www.atlassian.com/software/jira",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "GitHub",
+        "url": "https://github.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "GitLab",
+        "url": "https://gitlab.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Bitbucket",
+        "url": "https://bitbucket.org",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Google Drive",
+        "url": "https://drive.google.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Dropbox",
+        "url": "https://www.dropbox.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "OneDrive",
+        "url": "https://onedrive.live.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Figma",
+        "url": "https://www.figma.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Canva",
+        "url": "https://www.canva.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Twitch",
+        "url": "https://www.twitch.tv",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Spotify",
+        "url": "https://open.spotify.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Netflix",
+        "url": "https://www.netflix.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Amazon",
+        "url": "https://www.amazon.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Shopee",
+        "url": "https://shopee.co.id",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Tokopedia",
+        "url": "https://www.tokopedia.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Bukalapak",
+        "url": "https://www.bukalapak.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "ChatGPT",
+        "url": "https://chat.openai.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Google Gemini",
+        "url": "https://gemini.google.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Claude",
+        "url": "https://claude.ai",
+        "category": "other",
+        "icon": ""
+    }
+]

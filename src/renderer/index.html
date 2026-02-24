@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data:; script-src 'self';">
+  <title>RijanBox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+
+  <!-- ─── Title Bar (Custom Frameless) ─── -->
+  <div id="titlebar">
+    <div class="titlebar-drag">
+      <div class="titlebar-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.5" />
+        </svg>
+        <span>RijanBox</span>
+      </div>
+    </div>
+    <div class="titlebar-controls">
+      <button id="btn-minimize" class="titlebar-btn" title="Minimize">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <rect y="5" width="12" height="2" fill="currentColor" />
+        </svg>
+      </button>
+      <button id="btn-maximize" class="titlebar-btn" title="Maximize">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <rect x="1" y="1" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" />
+        </svg>
+      </button>
+      <button id="btn-close" class="titlebar-btn btn-close" title="Close">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── Lock Screen Overlay ─── -->
+  <div id="lock-screen" class="overlay hidden">
+    <div class="lock-container">
+      <div class="lock-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+        </svg>
+      </div>
+      <h2 id="lock-title">RijanBox Terkunci</h2>
+      <p id="lock-desc">Masukkan PIN untuk membuka</p>
+      <div class="pin-input-group" id="pin-verify-group">
+        <input type="password" id="pin-verify-input" class="pin-input" maxlength="8" placeholder="••••"
+          autocomplete="off">
+      </div>
+      <p id="pin-error" class="error-text hidden"></p>
+      <button id="btn-unlock" class="btn btn-primary">Buka Kunci</button>
+    </div>
+  </div>
+
+  <!-- ─── PIN Setup Screen ─── -->
+  <div id="pin-setup-screen" class="overlay hidden">
+    <div class="lock-container">
+      <div class="lock-icon setup-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L3 7v7c0 5 3.5 9.74 9 11 5.5-1.26 9-6 9-11V7l-9-5z" stroke="currentColor" stroke-width="2" />
+          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 id="pin-setup-title">Buat PIN Keamanan</h2>
+      <p id="pin-setup-desc">Buat PIN 4-8 digit untuk mengamankan aplikasi</p>
+      <div class="pin-input-group">
+        <input type="password" id="pin-new-input" class="pin-input" maxlength="8" placeholder="PIN baru"
+          autocomplete="off">
+      </div>
+      <div class="pin-input-group">
+        <input type="password" id="pin-confirm-input" class="pin-input" maxlength="8" placeholder="Konfirmasi PIN"
+          autocomplete="off">
+      </div>
+      <p id="pin-setup-error" class="error-text hidden"></p>
+      <div class="pin-setup-actions">
+        <button id="btn-skip-pin" class="btn btn-ghost">Lewati</button>
+        <button id="btn-create-pin" class="btn btn-primary">Buat PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Main Layout ─── -->
+  <div id="app-container">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-services" id="service-list">
+        <div id="no-services" class="sidebar-empty">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" opacity="0.4">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <path d="M17.5 14v7M14 17.5h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          <span id="no-services-text">Belum ada layanan</span>
+        </div>
+      </div>
+      <div class="sidebar-bottom">
+        <button id="btn-add-service" class="sidebar-action" title="Tambah Layanan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button id="btn-settings" class="sidebar-action" title="Pengaturan">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+              stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button id="btn-lock" class="sidebar-action" title="Kunci Aplikasi">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Welcome / Empty State -->
+      <div id="welcome-screen" class="content-panel">
+        <div class="welcome-container">
+          <div class="welcome-logo">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.5" />
+            </svg>
+          </div>
+          <h1>RijanBox</h1>
+          <p id="welcome-tagline">Kelola semua akun sosial media dalam satu aplikasi</p>
+          <button id="btn-welcome-add" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span id="welcome-add-text">Tambah Layanan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Webview Container -->
+      <div id="webview-container" class="content-panel hidden"></div>
+
+      <!-- Add Service / Catalog Panel -->
+      <div id="catalog-panel" class="content-panel hidden">
+        <div class="catalog-wrapper">
+          <div class="catalog-header">
+            <h2 id="catalog-title">Katalog Layanan</h2>
+            <button id="btn-catalog-close" class="btn-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="catalog-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+              <path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <input type="text" id="catalog-search-input" placeholder="Cari layanan...">
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="catalog-categories" id="catalog-categories">
+            <button class="cat-tab active" data-category="all">Semua</button>
+            <button class="cat-tab" data-category="messaging">Pesan</button>
+            <button class="cat-tab" data-category="social">Sosial</button>
+            <button class="cat-tab" data-category="email">Email</button>
+            <button class="cat-tab" data-category="work">Kerja</button>
+            <button class="cat-tab" data-category="other">Lainnya</button>
+          </div>
+
+          <!-- Service Grid -->
+          <div class="catalog-grid" id="catalog-grid"></div>
+
+          <!-- Custom URL Section -->
+          <div class="custom-url-section">
+            <h3 id="custom-url-title">URL Kustom</h3>
+            <div class="custom-url-form">
+              <input type="text" id="custom-url-name" placeholder="Nama layanan">
+              <input type="url" id="custom-url-input" placeholder="https://example.com">
+              <button id="btn-add-custom" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span id="btn-add-custom-text">Tambahkan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Panel -->
+      <div id="settings-panel" class="content-panel hidden">
+        <div class="settings-wrapper">
+          <div class="settings-header">
+            <h2 id="settings-title">Pengaturan</h2>
+            <button id="btn-settings-close" class="btn-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="settings-content">
+            <!-- General -->
+            <section class="settings-section">
+              <h3 id="settings-general-title">Umum</h3>
+              <div class="settings-row">
+                <label id="label-language">Bahasa</label>
+                <select id="setting-language" class="setting-select">
+                  <option value="id">🇮🇩 Bahasa Indonesia</option>
+                  <option value="en">🇬🇧 English</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label id="label-autostart">Mulai saat login</label>
+                <label class="toggle">
+                  <input type="checkbox" id="setting-autostart">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <label id="label-minimized">Mulai tersembunyi</label>
+                <label class="toggle">
+                  <input type="checkbox" id="setting-minimized">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <label id="label-tray">Tutup ke system tray</label>
+                <label class="toggle">
+                  <input type="checkbox" id="setting-tray">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </section>
+
+            <!-- Appearance -->
+            <section class="settings-section">
+              <h3 id="settings-appearance-title">Tampilan</h3>
+              <div class="settings-row">
+                <label id="label-theme">Tema</label>
+                <div class="theme-options">
+                  <button class="theme-btn" data-theme="light" id="theme-light">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" />
+                      <path
+                        d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>Terang</span>
+                  </button>
+                  <button class="theme-btn" data-theme="dark" id="theme-dark">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor"
+                        stroke-width="2" />
+                    </svg>
+                    <span>Gelap</span>
+                  </button>
+                  <button class="theme-btn" data-theme="auto" id="theme-auto">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2" />
+                      <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>Auto</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Security -->
+            <section class="settings-section">
+              <h3 id="settings-security-title">Keamanan</h3>
+              <div class="settings-row">
+                <label id="label-autolock">Kunci otomatis setelah</label>
+                <select id="setting-autolock" class="setting-select">
+                  <option value="0">Tidak pernah</option>
+                  <option value="1">1 menit</option>
+                  <option value="5" selected>5 menit</option>
+                  <option value="10">10 menit</option>
+                  <option value="15">15 menit</option>
+                  <option value="30">30 menit</option>
+                  <option value="60">60 menit</option>
+                </select>
+              </div>
+              <div class="settings-row" id="pin-status-row">
+                <label id="label-pin-status">PIN</label>
+                <div class="pin-actions">
+                  <span id="pin-status-text" class="badge">Tidak Aktif</span>
+                  <button id="btn-enable-pin" class="btn btn-sm btn-primary">Aktifkan PIN</button>
+                  <button id="btn-change-pin" class="btn btn-sm btn-outline hidden">Ubah PIN</button>
+                  <button id="btn-disable-pin" class="btn btn-sm btn-danger hidden">Nonaktifkan</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Keyboard Shortcuts -->
+            <section class="settings-section">
+              <h3 id="settings-shortcuts-title">Pintasan Keyboard</h3>
+              <div class="shortcuts-list">
+                <div class="shortcut-item"><kbd>Ctrl+L</kbd><span id="sc-lock">Kunci aplikasi</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+,</kbd><span id="sc-settings">Buka pengaturan</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+N</kbd><span id="sc-new">Tambah layanan baru</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+K</kbd><span id="sc-search">Cari layanan</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+1-9</kbd><span id="sc-switch">Beralih ke layanan 1-9</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+M</kbd><span id="sc-mute">Bisukan layanan aktif</span></div>
+                <div class="shortcut-item"><kbd>Ctrl+T</kbd><span id="sc-sidebar">Tampil/Sembunyikan sidebar</span>
+                </div>
+                <div class="shortcut-item"><kbd>F11</kbd><span id="sc-fullscreen">Mode layar penuh</span></div>
+              </div>
+            </section>
+
+            <!-- About -->
+            <section class="settings-section">
+              <h3 id="settings-about-title">Tentang</h3>
+              <div class="about-info">
+                <div class="about-logo">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.5" />
+                  </svg>
+                </div>
+                <p><strong>RijanBox</strong> v<span id="app-version">1.0.0</span></p>
+                <p class="about-desc">Multi-messenger app by Rijanara</p>
+                <p class="about-license">MIT License &copy; 2026</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Context Menu (for right-click on services) -->
+  <div id="context-menu" class="context-menu hidden">
+    <button class="ctx-item" id="ctx-rename">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Ubah Nama</span>
+    </button>
+    <button class="ctx-item" id="ctx-change-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+        <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <span>Ganti Ikon</span>
+    </button>
+    <button class="ctx-item" id="ctx-mute">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="2" />
+        <path d="M23 9l-6 6M17 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <span>Bisukan</span>
+    </button>
+    <button class="ctx-item" id="ctx-reload">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Muat Ulang</span>
+    </button>
+    <div class="ctx-separator"></div>
+    <button class="ctx-item" id="ctx-move-up">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <span>Pindah Ke Atas</span>
+    </button>
+    <button class="ctx-item" id="ctx-move-down">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <span>Pindah Ke Bawah</span>
+    </button>
+    <div class="ctx-separator"></div>
+    <button class="ctx-item ctx-danger" id="ctx-delete">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <span>Hapus</span>
+    </button>
+  </div>
+
+  <!-- Icon Picker Modal -->
+  <div id="icon-picker-overlay" class="modal-overlay hidden">
+    <div class="icon-picker-modal">
+      <div class="icon-picker-header">
+        <h3 id="icon-picker-title">Ganti Ikon</h3>
+        <button id="icon-picker-close" class="btn-icon">&times;</button>
+      </div>
+      <div class="icon-picker-tabs">
+        <button class="icon-tab active" data-tab="emoji" id="icon-tab-emoji">Emoji</button>
+        <button class="icon-tab" data-tab="upload" id="icon-tab-upload">Unggah Gambar</button>
+      </div>
+      <div id="icon-tab-emoji-content" class="icon-tab-content">
+        <div class="emoji-grid" id="emoji-grid"></div>
+      </div>
+      <div id="icon-tab-upload-content" class="icon-tab-content hidden">
+        <div class="upload-area" id="upload-area">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" />
+            <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <p id="upload-text">Klik untuk memilih gambar</p>
+          <p class="upload-hint">PNG, JPG, GIF, SVG, WebP</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+{
+    "app": {
+        "name": "RijanBox",
+        "tagline": "Kelola semua akun sosial media dalam satu aplikasi"
+    },
+    "sidebar": {
+        "services": "Layanan",
+        "addService": "Tambah Layanan",
+        "settings": "Pengaturan",
+        "lock": "Kunci Aplikasi",
+        "noServices": "Belum ada layanan.\nKlik + untuk menambahkan."
+    },
+    "catalog": {
+        "title": "Katalog Layanan",
+        "search": "Cari layanan...",
+        "categories": {
+            "all": "Semua",
+            "messaging": "Pesan",
+            "social": "Sosial Media",
+            "email": "Email",
+            "work": "Kerja",
+            "other": "Lainnya"
+        },
+        "customUrl": "URL Kustom",
+        "customUrlPlaceholder": "Masukkan URL (contoh: https://example.com)",
+        "serviceName": "Nama Layanan",
+        "serviceNamePlaceholder": "Masukkan nama layanan",
+        "add": "Tambahkan",
+        "cancel": "Batal"
+    },
+    "pin": {
+        "setupTitle": "Buat PIN Keamanan",
+        "setupDesc": "Buat PIN 4-8 digit untuk mengamankan aplikasi Anda",
+        "enterPin": "Masukkan PIN",
+        "confirmPin": "Konfirmasi PIN",
+        "create": "Buat PIN",
+        "unlockTitle": "RijanBox Terkunci",
+        "unlockDesc": "Masukkan PIN untuk membuka",
+        "unlock": "Buka Kunci",
+        "incorrect": "PIN salah. Coba lagi.",
+        "mismatch": "PIN tidak cocok. Coba lagi.",
+        "skip": "Lewati"
+    },
+    "settings": {
+        "title": "Pengaturan",
+        "general": "Umum",
+        "security": "Keamanan",
+        "appearance": "Tampilan",
+        "notifications": "Notifikasi",
+        "shortcuts": "Pintasan",
+        "about": "Tentang",
+        "language": "Bahasa",
+        "theme": "Tema",
+        "themeLight": "Terang",
+        "themeDark": "Gelap",
+        "themeAuto": "Otomatis (Sistem)",
+        "autoStart": "Mulai saat login",
+        "startMinimized": "Mulai dalam keadaan tersembunyi",
+        "closeToTray": "Tutup ke system tray",
+        "autoLock": "Kunci otomatis setelah",
+        "autoLockNever": "Tidak pernah",
+        "minutes": "menit",
+        "pinEnabled": "PIN diaktifkan",
+        "changePin": "Ubah PIN",
+        "disablePin": "Nonaktifkan PIN",
+        "enablePin": "Aktifkan PIN",
+        "back": "Kembali",
+        "version": "Versi"
+    },
+    "contextMenu": {
+        "rename": "Ubah Nama",
+        "changeIcon": "Ganti Ikon",
+        "mute": "Bisukan",
+        "unmute": "Bunyikan",
+        "edit": "Edit",
+        "delete": "Hapus",
+        "reload": "Muat Ulang",
+        "moveUp": "Pindah Ke Atas",
+        "moveDown": "Pindah Ke Bawah",
+        "deleteConfirm": "Yakin hapus layanan ini?"
+    },
+    "iconPicker": {
+        "emoji": "Emoji",
+        "upload": "Unggah Gambar",
+        "uploadText": "Klik untuk memilih gambar"
+    },
+    "shortcuts": {
+        "title": "Pintasan Keyboard",
+        "lock": "Kunci aplikasi",
+        "settings": "Buka pengaturan",
+        "newService": "Tambah layanan baru",
+        "search": "Cari layanan",
+        "switchService": "Beralih ke layanan 1-9",
+        "toggleMute": "Bisukan/Bunyikan layanan aktif",
+        "toggleSidebar": "Tampil/Sembunyikan sidebar",
+        "fullscreen": "Mode layar penuh"
+    }
+}
