@@ -81,3 +81,27 @@ Gunakan keyboard untuk navigasi yang lebih cepat.
 | `Ctrl + N` | Tambah Layanan Baru |
 | `Ctrl + K` | Cari Layanan (Katalog) |
 | `Ctrl + 1-9` | Pindah ke Layanan 1 sampai 9 |
+
+---
+
+## 7. Cara Memperbarui Aplikasi
+
+Untuk mendapatkan fitur terbaru (seperti v1.1.0), Anda perlu memperbarui aplikasi secara manual:
+
+### 🪟 Windows
+1. Unduh file `.exe` terbaru dari halaman [Releases](https://github.com/Rijanara-Teknologi/RijanBox/releases).
+2. Jalankan installer tersebut.
+3. Installer akan otomatis menimpa versi lama dan memperbarui aplikasi Anda tanpa menghapus data layanan.
+
+### 🍎 macOS
+1. Unduh file `.dmg` terbaru.
+2. Buka file `.dmg` dan tarik ikon **RijanBox** ke folder **Applications**.
+3. Pilih **Replace** jika muncul peringatan bahwa aplikasi sudah ada.
+
+### 🐧 Linux
+- **AppImage**: Unduh file `.AppImage` baru, beri izin eksekusi (`chmod +x`), dan ganti file lama Anda.
+- **Debian/Ubuntu**: Unduh file `.deb` terbaru dan jalankan perintah:
+  ```bash
+  sudo dpkg -i rijanbox_1.x.x_amd64.deb
+  ```
+

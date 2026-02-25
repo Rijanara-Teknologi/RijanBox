@@ -81,3 +81,27 @@ Use the keyboard for faster navigation.
 | `Ctrl + N` | Add New Service |
 | `Ctrl + K` | Search Services (Catalog) |
 | `Ctrl + 1-9` | Switch to Service 1 to 9 |
+
+---
+
+## 7. How to Update the App
+
+To get the latest features (like v1.1.0), you need to update the app manually:
+
+### 🪟 Windows
+1. Download the latest `.exe` file from the [Releases](https://github.com/Rijanara-Teknologi/RijanBox/releases) page.
+2. Run the installer.
+3. The installer will automatically overwrite the old version and update your app without deleting your service data.
+
+### 🍎 macOS
+1. Download the latest `.dmg` file.
+2. Open the `.dmg` and drag the **RijanBox** icon to the **Applications** folder.
+3. Select **Replace** if a warning appears saying the app already exists.
+
+### 🐧 Linux
+- **AppImage**: Download the new `.AppImage` file, make it executable (`chmod +x`), and replace your old file.
+- **Debian/Ubuntu**: Download the latest `.deb` file and run:
+  ```bash
+  sudo dpkg -i rijanbox_1.x.x_amd64.deb
+  ```
+
