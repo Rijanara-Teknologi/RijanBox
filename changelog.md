@@ -1,5 +1,25 @@
 # RijanBox - Changelog
 
+## [1.1.0] - 2026-02-25
+### Added
+- **Service Hibernation** — Save RAM by right-clicking a service and selecting "Hibernate".
+- **DNS AdBlocker** — Built-in DNS-over-HTTPS with 5 providers (NextDNS, AdGuard, etc.).
+- **Homescreen UI** — Brand new welcome screen with statistics, quotes, and quick terminal.
+- **Link Opening Behavior** — Toggle between opening links in-app or in your default browser.
+- **PIN Length Limit** — Enforced 4-8 digits for PIN security with better validation.
+- **Bilingual Documentation** — Comprehensive `id-docs.md` and `en-docs.md` in `docs` folder.
+
+### Fixed
+- **Sidebar Tooltips** — Icon tooltips now correctly switch between English and Indonesian.
+- **Rename Modal** — Input field now stretches full-width for better visibility.
+- **Translation Gaps** — Fixed various untranslated labels in Security and Theme settings.
+- **PIN Status** — Real-time localized status indicator ("Active" / "Inactive").
+
+### Improved
+- **README.md** — Refreshed layout with screenshots and localized documentation links.
+- **Navigation** — Consistent "Back to Home" button in settings.
+
+
 ## [2026-02-24] - Feature Update: Custom Icons, Cross-Platform & UX Improvements
 
 ### Added

@@ -129,6 +129,7 @@
             'label-autolock': 'settings.autoLock',
             'label-pin-status': 'settings.security',
             'no-services-text': 'sidebar.noServices',
+            'btn-settings-back-text': 'settings.backToHome',
             'sc-lock': 'shortcuts.lock',
             'sc-settings': 'shortcuts.settings',
             'sc-new': 'shortcuts.newService',
@@ -137,11 +138,27 @@
             'sc-mute': 'shortcuts.toggleMute',
             'sc-sidebar': 'shortcuts.toggleSidebar',
             'sc-fullscreen': 'shortcuts.fullscreen',
+            'btn-enable-pin': 'settings.enablePin',
+            'btn-change-pin': 'settings.changePin',
+            'btn-disable-pin': 'settings.disablePin',
+            'theme-light-text': 'settings.themeLight',
+            'theme-dark-text': 'settings.themeDark',
+            'theme-auto-text': 'settings.themeAuto',
+            'label-minutes-suffix': 'settings.minutes',
+            'btn-home': { key: 'sidebar.home', attr: 'title' },
+            'btn-add-service': { key: 'sidebar.addService', attr: 'title' },
+            'btn-settings': { key: 'sidebar.settings', attr: 'title' },
+            'btn-lock': { key: 'sidebar.lock', attr: 'title' },
         };
 
-        for (const [id, key] of Object.entries(map)) {
+        for (const [id, value] of Object.entries(map)) {
             const el = document.getElementById(id);
-            if (el) el.textContent = t(key);
+            if (!el) continue;
+            if (typeof value === 'string') {
+                el.textContent = t(value);
+            } else {
+                el.setAttribute(value.attr, t(value.key));
+            }
         }
 
         // Placeholders
@@ -182,6 +199,12 @@
         document.querySelector('#ctx-delete span').textContent = t('contextMenu.delete');
         document.querySelector('#ctx-move-up span').textContent = t('contextMenu.moveUp');
         document.querySelector('#ctx-move-down span').textContent = t('contextMenu.moveDown');
+
+        // Homescreen context menu
+        document.querySelector('#hs-ctx-rename span').textContent = t('contextMenu.rename');
+        document.querySelector('#hs-ctx-change-icon span').textContent = t('contextMenu.changeIcon');
+        document.querySelector('#hs-ctx-mute span').textContent = t('contextMenu.mute');
+        document.querySelector('#hs-ctx-delete span').textContent = t('contextMenu.delete');
 
         // Icon picker
         document.getElementById('icon-picker-title').textContent = t('contextMenu.changeIcon');
@@ -285,7 +308,7 @@
             grid.innerHTML = '';
             services.forEach(svc => {
                 const card = document.createElement('div');
-                card.className = 'homescreen-card';
+                card.className = 'homescreen-card' + (svc.hibernated ? ' hibernated' : '');
 
                 let iconHtml;
                 if (svc.icon && svc.icon.startsWith('emoji:')) {
@@ -300,17 +323,61 @@
                 const badgeCount = badgeCounts[svc.id] || 0;
                 const badgeHtml = badgeCount > 0 ? `<span class="hs-badge">${badgeCount > 99 ? '99+' : badgeCount}</span>` : '';
 
+                const hibernateIcon = svc.hibernated ? `
+                    <div class="hs-hibernate-badge">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" />
+                        </svg>
+                    </div>
+                ` : '';
+
                 card.innerHTML = `
                     <div class="hs-icon">${iconHtml}</div>
                     <span class="hs-label">${svc.name}</span>
                     ${badgeHtml}
+                    ${hibernateIcon}
                 `;
                 card.addEventListener('click', () => activateService(svc.id));
+                card.addEventListener('contextmenu', (e) => showHomescreenContextMenu(e, svc.id));
                 grid.appendChild(card);
             });
         }
 
+        // Update hero stats
+        document.getElementById('hs-stat-services').textContent = services.length;
+        document.getElementById('hs-stat-services-label').textContent = t('homescreen.services');
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString(settings.language === 'en' ? 'en-US' : 'id-ID', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('hs-stat-time').textContent = timeStr;
+        document.getElementById('hs-stat-time-label').textContent = t('homescreen.time');
+
         updateHomescreenQuote();
+    }
+
+    function showHomescreenContextMenu(e, serviceId) {
+        e.preventDefault();
+        contextMenuServiceId = serviceId;
+        const menu = document.getElementById('hs-context-menu');
+        const svc = services.find(s => s.id === serviceId);
+
+        // Update mute label
+        const muteBtn = document.getElementById('hs-ctx-mute');
+        muteBtn.querySelector('span').textContent = svc.muted ? t('contextMenu.unmute') : t('contextMenu.mute');
+
+        // Update hibernate label
+        const hibernateBtn = document.getElementById('hs-ctx-hibernate');
+        hibernateBtn.querySelector('span').textContent = svc.hibernated ? t('contextMenu.unhibernate') : t('contextMenu.hibernate');
+
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        menu.classList.remove('hidden');
+
+        // Close on next click
+        const closeMenu = () => {
+            menu.classList.add('hidden');
+            document.removeEventListener('click', closeMenu);
+        };
+        setTimeout(() => document.addEventListener('click', closeMenu), 10);
     }
 
     function updateHomescreenQuote() {
@@ -434,7 +501,10 @@
 
         services.forEach(svc => {
             const item = document.createElement('div');
-            item.className = 'service-item' + (svc.id === activeServiceId ? ' active' : '') + (svc.muted ? ' muted' : '');
+            item.className = 'service-item' +
+                (svc.id === activeServiceId ? ' active' : '') +
+                (svc.muted ? ' muted' : '') +
+                (svc.hibernated ? ' hibernated' : '');
             item.dataset.id = svc.id;
             item.dataset.tooltip = svc.name;
 
@@ -460,12 +530,20 @@
     }
 
     // ─── Service Activation ───
-    function activateService(id) {
+    async function activateService(id) {
         const svc = services.find(s => s.id === id);
         if (!svc) return;
 
         activeServiceId = id;
         window.rijanbox.activeService.set(id);
+
+        // If hibernated, wake up
+        if (svc.hibernated) {
+            svc.hibernated = false;
+            await window.rijanbox.services.update(id, { hibernated: false });
+            renderSidebar();
+            renderHomescreen();
+        }
 
         // Update sidebar highlights
         document.querySelectorAll('.service-item').forEach(el => {
@@ -611,6 +689,10 @@
         document.getElementById('ctx-move-up').style.opacity = svcIdx === 0 ? '0.4' : '1';
         document.getElementById('ctx-move-down').style.opacity = svcIdx === services.length - 1 ? '0.4' : '1';
 
+        // Update hibernate label
+        const hibernateBtn = document.getElementById('ctx-hibernate');
+        hibernateBtn.querySelector('span').textContent = svc.hibernated ? t('contextMenu.unhibernate') : t('contextMenu.hibernate');
+
         menu.style.left = e.clientX + 'px';
         menu.style.top = e.clientY + 'px';
         menu.classList.remove('hidden');
@@ -621,6 +703,37 @@
             document.removeEventListener('click', closeMenu);
         };
         setTimeout(() => document.addEventListener('click', closeMenu), 10);
+    }
+
+    async function toggleHibernate(serviceId) {
+        const svc = services.find(s => s.id === serviceId);
+        if (!svc) return;
+
+        const isHibernating = !svc.hibernated;
+        const updated = await window.rijanbox.services.toggleHibernate(serviceId);
+        if (updated) {
+            svc.hibernated = updated.hibernated;
+
+            if (svc.hibernated) {
+                // Destroy webview
+                const wv = document.querySelector(`webview[data-service-id="${serviceId}"]`);
+                if (wv) wv.remove();
+
+                // If it was the active service, go back to homescreen
+                if (activeServiceId === serviceId) {
+                    activeServiceId = null;
+                    showPanel('welcome');
+                }
+            } else {
+                // Wake up manually (usually via context menu)
+                if (activeServiceId === serviceId) {
+                    loadWebview(svc);
+                }
+            }
+
+            renderSidebar();
+            renderHomescreen();
+        }
     }
 
     // ─── Lock / PIN ───
@@ -666,6 +779,18 @@
 
         // Color theme dropdown
         document.getElementById('setting-color-theme').value = settings.colorTheme || 'blue';
+
+        document.getElementById('setting-autolock').value = String(settings.autoLockMinutes ?? 5);
+
+        // Update Never option text
+        const autoLockSelect = document.getElementById('setting-autolock');
+        const neverOption = autoLockSelect.querySelector('option[value="0"]');
+        if (neverOption) neverOption.textContent = t('settings.autoLockNever');
+
+        const suffix = document.getElementById('label-minutes-suffix');
+        if (suffix) {
+            suffix.style.display = autoLockSelect.value === '0' ? 'none' : 'inline';
+        }
 
         // Link open behavior
         document.getElementById('setting-link-open').value = settings.linkOpenBehavior || 'inapp';
@@ -720,13 +845,13 @@
         const btnDisable = document.getElementById('btn-disable-pin');
 
         if (enabled) {
-            statusText.textContent = settings.language === 'en' ? 'Active' : 'Aktif';
+            statusText.textContent = t('settings.pinActive');
             statusText.classList.add('active');
             btnEnable.classList.add('hidden');
             btnChange.classList.remove('hidden');
             btnDisable.classList.remove('hidden');
         } else {
-            statusText.textContent = settings.language === 'en' ? 'Inactive' : 'Tidak Aktif';
+            statusText.textContent = t('settings.pinInactive');
             statusText.classList.remove('active');
             btnEnable.classList.remove('hidden');
             btnChange.classList.add('hidden');
@@ -783,9 +908,14 @@
             if (e.key === 'Enter') addCustomService();
         });
 
-        // Settings close
-        document.getElementById('btn-settings-close').addEventListener('click', () => {
-            showPanel(services.length > 0 ? 'webview' : 'welcome');
+        // Settings close via back button
+        document.getElementById('btn-settings-back').addEventListener('click', () => {
+            showPanel('welcome');
+        });
+
+        // Home button
+        document.getElementById('btn-home').addEventListener('click', () => {
+            showPanel('welcome');
         });
 
         // Settings tabs
@@ -819,8 +949,14 @@
             await window.rijanbox.settings.set('closeToTray', settings.closeToTray);
         });
         document.getElementById('setting-autolock').addEventListener('change', async (e) => {
-            settings.autoLockMinutes = parseInt(e.target.value);
+            const val = e.target.value;
+            settings.autoLockMinutes = parseInt(val);
             await window.rijanbox.settings.set('autoLockMinutes', settings.autoLockMinutes);
+
+            const suffix = document.getElementById('label-minutes-suffix');
+            if (suffix) {
+                suffix.style.display = val === '0' ? 'none' : 'inline';
+            }
         });
 
         // Theme
@@ -879,8 +1015,8 @@
         document.getElementById('btn-create-pin').addEventListener('click', async () => {
             const pin = document.getElementById('pin-new-input').value;
             const confirm = document.getElementById('pin-confirm-input').value;
-            if (pin.length < 4) {
-                document.getElementById('pin-setup-error').textContent = settings.language === 'en' ? 'PIN must be at least 4 digits' : 'PIN minimal 4 digit';
+            if (pin.length < 4 || pin.length > 8) {
+                document.getElementById('pin-setup-error').textContent = pin.length < 4 ? t('pin.minLength') : t('pin.maxLength');
                 document.getElementById('pin-setup-error').classList.remove('hidden');
                 return;
             }
@@ -946,6 +1082,10 @@
             const wv = document.querySelector(`webview[data-service-id="${contextMenuServiceId}"]`);
             if (wv) wv.reload();
         });
+        document.getElementById('ctx-hibernate').addEventListener('click', () => {
+            if (!contextMenuServiceId) return;
+            toggleHibernate(contextMenuServiceId);
+        });
         document.getElementById('ctx-move-up').addEventListener('click', async () => {
             if (!contextMenuServiceId) return;
             const idx = services.findIndex(s => s.id === contextMenuServiceId);
@@ -980,6 +1120,50 @@
                 else showPanel('welcome');
             }
             renderSidebar();
+        });
+
+        // Homescreen context menu actions
+        document.getElementById('hs-ctx-rename').addEventListener('click', () => {
+            if (!contextMenuServiceId) return;
+            openRenameModal(contextMenuServiceId);
+        });
+        document.getElementById('hs-ctx-change-icon').addEventListener('click', () => {
+            if (!contextMenuServiceId) return;
+            openIconPicker(contextMenuServiceId);
+        });
+        document.getElementById('hs-ctx-mute').addEventListener('click', async () => {
+            if (!contextMenuServiceId) return;
+            const updated = await window.rijanbox.services.toggleMute(contextMenuServiceId);
+            if (updated) {
+                const idx = services.findIndex(s => s.id === contextMenuServiceId);
+                if (idx !== -1) services[idx].muted = updated.muted;
+                renderSidebar();
+                renderHomescreen();
+            }
+        });
+        document.getElementById('hs-ctx-hibernate').addEventListener('click', () => {
+            if (!contextMenuServiceId) return;
+            toggleHibernate(contextMenuServiceId);
+        });
+        document.getElementById('hs-ctx-delete').addEventListener('click', async () => {
+            if (!contextMenuServiceId) return;
+            const svc = services.find(s => s.id === contextMenuServiceId);
+            if (!svc) return;
+            if (!confirm(t('contextMenu.deleteConfirm'))) return;
+            await window.rijanbox.services.delete(contextMenuServiceId);
+            services = services.filter(s => s.id !== contextMenuServiceId);
+
+            // Remove webview
+            const wv = document.querySelector(`webview[data-service-id="${contextMenuServiceId}"]`);
+            if (wv) wv.remove();
+
+            if (activeServiceId === contextMenuServiceId) {
+                activeServiceId = services.length > 0 ? services[0].id : null;
+                if (activeServiceId) activateService(activeServiceId);
+                else showPanel('welcome');
+            }
+            renderSidebar();
+            renderHomescreen();
         });
 
         // Activity tracking

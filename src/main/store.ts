@@ -12,6 +12,7 @@ interface ServiceData {
     notificationEnabled: boolean;
     muted: boolean;
     partitionId: string;
+    hibernated: boolean;
     createdAt: string;
 }
 

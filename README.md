@@ -1,25 +1,44 @@
-# RijanBox
+# RijanBox 🚀
 
 <p align="center">
+  <img src="docs/img/homescreen.png" alt="RijanBox Banner" width="800">
+  <br>
   <strong>Multi-Messenger Desktop App</strong><br>
   Manage unlimited social media accounts in one secure, lightweight, and elegant desktop app.
 </p>
 
 ---
 
-## ✨ Features
+## ✨ Features at a Glance
 
-- 🆓 **Free & Open Source** — MIT License
-- ♾️ **Unlimited Accounts** — Add multiple accounts with isolated sessions
-- 🔐 **PIN Security** — Lock the app with a PIN + auto-lock on idle
-- 📦 **52+ Service Catalog** — WhatsApp, Telegram, Discord, Slack, Gmail, and more
-- 🎨 **Custom Icons** — Upload image or pick emoji for each service
-- 🎨 **10 Color Themes** — Blue, Indigo, Purple, Teal, Green, Orange, Red, Pink, Cyan, Slate
-- 🔔 **Push Notifications** — Real-time notifications per service
-- 🖥️ **System Tray** — Runs in background with quick tray access (Windows, macOS, Linux)
-- ⚙️ **Settings** — Language (ID/EN), theme (Light/Dark/Auto), auto-start, start minimized
-- ⌨️ **Keyboard Shortcuts** — Fast navigation for power users
-- 🔇 **Per-Service Mute** — Mute notifications per service
+RijanBox is built for productivity and privacy. Here's why you'll love it:
+
+- 🎨 **Elegant Design** — Modern glassmorphism UI with Light and Dark modes.
+- 🔐 **Privacy First** — Secure your workspace with PIN protection and auto-lock.
+- ♾️ **Unlimited Services** — WhatsApp, Telegram, Discord, and anything with a URL.
+- 💤 **Service Hibernation** — Save RAM by sleeping unused services.
+- 🎨 **Personalization** — 10 color themes and custom icon support.
+
+---
+
+## 📸 Screenshots
+
+| Homescreen (Light) | Homescreen (Dark) |
+|---|---|
+| ![Light Mode](docs/img/homescreen.png) | ![Dark Mode](docs/img/homescreen_dark.png) |
+
+| Service Catalog | App Settings |
+|---|---|
+| ![Catalog](docs/img/catalog.png) | ![Settings](docs/img/settings_general.png) |
+
+---
+
+## 📖 Documentation
+
+For full details on how to use RijanBox, check out our comprehensive guides:
+
+- 🇮🇩 [**Dokumentasi Lengkap (Bahasa Indonesia)**](docs/id-docs.md)
+- 🇬🇧 [**Complete Documentation (English)**](docs/en-docs.md)
 
 ## 🚀 Quick Start
 

@@ -5,6 +5,7 @@
     },
     "sidebar": {
         "services": "Services",
+        "home": "Home",
         "addService": "Add Service",
         "settings": "Settings",
         "lock": "Lock App",
@@ -23,7 +24,9 @@
             "Your digital life, simplified.",
             "One app to manage them all.",
             "Secure, lightweight, and elegant."
-        ]
+        ],
+        "services": "Services",
+        "time": "Time"
     },
     "catalog": {
         "title": "Service Catalog",
@@ -54,6 +57,8 @@
         "unlock": "Unlock",
         "incorrect": "Incorrect PIN. Try again.",
         "mismatch": "PINs don't match. Try again.",
+        "minLength": "PIN must be at least 4 digits",
+        "maxLength": "PIN cannot exceed 8 digits",
         "skip": "Skip"
     },
     "settings": {
@@ -67,6 +72,7 @@
         "language": "Language",
         "theme": "Theme",
         "colorTheme": "Color Theme",
+        "backToHome": "Back to Home",
         "themeLight": "Light",
         "themeDark": "Dark",
         "themeAuto": "Auto (System)",
@@ -76,6 +82,8 @@
         "autoLock": "Auto-lock after",
         "autoLockNever": "Never",
         "minutes": "minutes",
+        "pinActive": "Active",
+        "pinInactive": "Inactive",
         "pinEnabled": "PIN enabled",
         "changePin": "Change PIN",
         "disablePin": "Disable PIN",
@@ -102,6 +110,8 @@
         "changeIcon": "Change Icon",
         "mute": "Mute",
         "unmute": "Unmute",
+        "hibernate": "Hibernate",
+        "unhibernate": "Wake Up",
         "edit": "Edit",
         "delete": "Delete",
         "reload": "Reload",

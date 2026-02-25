@@ -5,6 +5,7 @@
     },
     "sidebar": {
         "services": "Layanan",
+        "home": "Beranda",
         "addService": "Tambah Layanan",
         "settings": "Pengaturan",
         "lock": "Kunci Aplikasi",
@@ -23,7 +24,9 @@
             "Kehidupan digital Anda, disederhanakan.",
             "Satu aplikasi untuk mengelola semuanya.",
             "Aman, ringan, dan elegan."
-        ]
+        ],
+        "services": "Layanan",
+        "time": "Waktu"
     },
     "catalog": {
         "title": "Katalog Layanan",
@@ -54,6 +57,8 @@
         "unlock": "Buka Kunci",
         "incorrect": "PIN salah. Coba lagi.",
         "mismatch": "PIN tidak cocok. Coba lagi.",
+        "minLength": "PIN minimal 4 digit",
+        "maxLength": "PIN maksimal 8 digit",
         "skip": "Lewati"
     },
     "settings": {
@@ -67,6 +72,7 @@
         "language": "Bahasa",
         "theme": "Tema",
         "colorTheme": "Warna Tema",
+        "backToHome": "Kembali ke Beranda",
         "themeLight": "Terang",
         "themeDark": "Gelap",
         "themeAuto": "Otomatis (Sistem)",
@@ -76,6 +82,8 @@
         "autoLock": "Kunci otomatis setelah",
         "autoLockNever": "Tidak pernah",
         "minutes": "menit",
+        "pinActive": "Aktif",
+        "pinInactive": "Tidak Aktif",
         "pinEnabled": "PIN diaktifkan",
         "changePin": "Ubah PIN",
         "disablePin": "Nonaktifkan PIN",
@@ -101,7 +109,9 @@
         "rename": "Ubah Nama",
         "changeIcon": "Ganti Ikon",
         "mute": "Bisukan",
-        "unmute": "Bunyikan",
+        "unmute": "Aktifkan Suara",
+        "hibernate": "Hibernasi",
+        "unhibernate": "Bangunkan",
         "edit": "Edit",
         "delete": "Hapus",
         "reload": "Muat Ulang",

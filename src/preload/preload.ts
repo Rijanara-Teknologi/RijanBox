@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('rijanbox', {
         delete: (id: string) => ipcRenderer.invoke('services:delete', id),
         reorder: (ids: string[]) => ipcRenderer.invoke('services:reorder', ids),
         toggleMute: (id: string) => ipcRenderer.invoke('services:toggle-mute', id),
+        toggleHibernate: (id: string) => ipcRenderer.invoke('services:toggle-hibernate', id),
     },
 
     // Settings

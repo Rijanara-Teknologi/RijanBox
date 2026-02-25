@@ -68,6 +68,7 @@ export function registerIpcHandlers(): void {
             notificationEnabled: true,
             muted: false,
             partitionId: generatePartitionId(data.name),
+            hibernated: false,
             createdAt: new Date().toISOString(),
         };
         services.push(newService);
@@ -79,7 +80,7 @@ export function registerIpcHandlers(): void {
         const services = store.get('services');
         const idx = services.findIndex((s: ServiceData) => s.id === id);
         if (idx === -1) return null;
-        const allowed: (keyof ServiceData)[] = ['name', 'url', 'icon', 'notificationEnabled', 'muted', 'favicon'];
+        const allowed: (keyof ServiceData)[] = ['name', 'url', 'icon', 'notificationEnabled', 'muted', 'favicon', 'hibernated'];
         for (const key of allowed) {
             if (key in updates) {
                 (services[idx] as any)[key] = (updates as any)[key];
@@ -112,6 +113,15 @@ export function registerIpcHandlers(): void {
         const idx = services.findIndex((s: ServiceData) => s.id === id);
         if (idx === -1) return null;
         services[idx].muted = !services[idx].muted;
+        store.set('services', services);
+        return services[idx];
+    });
+
+    ipcMain.handle('services:toggle-hibernate', (_event, id: string) => {
+        const services = store.get('services');
+        const idx = services.findIndex((s: ServiceData) => s.id === id);
+        if (idx === -1) return null;
+        services[idx].hibernated = !services[idx].hibernated;
         store.set('services', services);
         return services[idx];
     });
