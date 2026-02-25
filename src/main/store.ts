@@ -23,6 +23,9 @@ interface SettingsData {
     startMinimized: boolean;
     autoLockMinutes: number;
     closeToTray: boolean;
+    linkOpenBehavior: 'inapp' | 'external';
+    adblockDns: 'bebasid' | 'openbld' | 'nextdns' | 'adguard' | 'off';
+    adblockCustomDoh: string;
 }
 
 interface StoreSchema {
@@ -47,6 +50,9 @@ const DEFAULTS: StoreSchema = {
         startMinimized: false,
         autoLockMinutes: 5,
         closeToTray: true,
+        linkOpenBehavior: 'inapp',
+        adblockDns: 'bebasid',
+        adblockCustomDoh: '',
     },
     activeServiceId: '',
 };

@@ -10,6 +10,21 @@
         "lock": "Lock App",
         "noServices": "No services yet.\nClick + to add one."
     },
+    "homescreen": {
+        "welcome": "Welcome to RijanBox",
+        "welcomeBack": "Welcome back!",
+        "getStarted": "Get started by adding your favorite services",
+        "popularServices": "Popular Services",
+        "yourServices": "Your Services",
+        "exploreCatalog": "Explore Catalog",
+        "quotes": [
+            "All your messaging apps, one secure place.",
+            "Stay connected, stay organized.",
+            "Your digital life, simplified.",
+            "One app to manage them all.",
+            "Secure, lightweight, and elegant."
+        ]
+    },
     "catalog": {
         "title": "Service Catalog",
         "search": "Search services...",
@@ -65,8 +80,22 @@
         "changePin": "Change PIN",
         "disablePin": "Disable PIN",
         "enablePin": "Enable PIN",
+        "linkOpen": "Open links in",
+        "linkInApp": "In-App Browser",
+        "linkExternal": "Default Browser",
+        "adblock": "Ad Blocker (DNS)",
+        "adblockProvider": "DNS Provider",
+        "adblockCustomDoh": "DNS-over-HTTPS URL",
+        "adblockSignup": "Sign up first at",
+        "adblockOff": "Off (No ad blocking)",
         "back": "Back",
         "version": "Version"
+    },
+    "rename": {
+        "title": "Rename Service",
+        "placeholder": "Enter new name",
+        "save": "Save",
+        "cancel": "Cancel"
     },
     "contextMenu": {
         "rename": "Rename",

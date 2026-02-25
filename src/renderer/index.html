@@ -136,25 +136,45 @@
 
     <!-- Main Content -->
     <main id="main-content">
-      <!-- Welcome / Empty State -->
+      <!-- Homescreen -->
       <div id="welcome-screen" class="content-panel">
-        <div class="welcome-container">
-          <div class="welcome-logo">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
-              <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
-              <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
-              <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.5" />
-            </svg>
+        <div class="homescreen">
+          <div class="homescreen-header">
+            <div class="welcome-logo">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.7" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.5" />
+              </svg>
+            </div>
+            <h1 id="homescreen-welcome">Selamat Datang di RijanBox</h1>
+            <p id="homescreen-quote" class="homescreen-quote"></p>
           </div>
-          <h1>RijanBox</h1>
-          <p id="welcome-tagline">Kelola semua akun sosial media dalam satu aplikasi</p>
-          <button id="btn-welcome-add" class="btn btn-primary btn-lg">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-            <span id="welcome-add-text">Tambah Layanan</span>
-          </button>
+
+          <!-- New users: popular services to add -->
+          <div id="homescreen-popular" class="homescreen-section hidden">
+            <h3 id="homescreen-popular-title">Layanan Populer</h3>
+            <div id="homescreen-popular-grid" class="homescreen-grid"></div>
+            <button id="btn-homescreen-catalog" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span id="homescreen-catalog-text">Jelajahi Katalog</span>
+            </button>
+          </div>
+
+          <!-- Returning users: their services grid -->
+          <div id="homescreen-services" class="homescreen-section hidden">
+            <h3 id="homescreen-services-title">Layanan Anda</h3>
+            <div id="homescreen-services-grid" class="homescreen-grid"></div>
+            <button id="btn-homescreen-explore" class="btn btn-outline btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span id="homescreen-explore-text">Jelajahi Katalog</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -224,10 +244,51 @@
             </button>
           </div>
 
-          <div class="settings-content">
+          <!-- Tab Bar -->
+          <div class="settings-tabs">
+            <button class="settings-tab active" data-settings-tab="general">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  stroke="currentColor" stroke-width="2" />
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+              </svg>
+              <span id="tab-label-general">Umum</span>
+            </button>
+            <button class="settings-tab" data-settings-tab="appearance">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" stroke="currentColor" stroke-width="2" />
+              </svg>
+              <span id="tab-label-appearance">Tampilan</span>
+            </button>
+            <button class="settings-tab" data-settings-tab="security">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" />
+              </svg>
+              <span id="tab-label-security">Keamanan</span>
+            </button>
+            <button class="settings-tab" data-settings-tab="shortcuts">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2" />
+                <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h8" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span id="tab-label-shortcuts">Pintasan</span>
+            </button>
+            <button class="settings-tab" data-settings-tab="about">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span id="tab-label-about">Tentang</span>
+            </button>
+          </div>
+
+          <!-- Tab Contents -->
+          <div class="settings-tab-contents">
             <!-- General -->
-            <section class="settings-section">
-              <h3 id="settings-general-title">Umum</h3>
+            <div class="settings-tab-content active" data-settings-content="general">
               <div class="settings-row">
                 <label id="label-language">Bahasa</label>
                 <select id="setting-language" class="setting-select">
@@ -256,11 +317,35 @@
                   <span class="toggle-slider"></span>
                 </label>
               </div>
-            </section>
+              <div class="settings-row">
+                <label id="label-link-open">Buka tautan di</label>
+                <select id="setting-link-open" class="setting-select">
+                  <option value="inapp">Browser Dalam Aplikasi</option>
+                  <option value="external">Browser Bawaan</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label id="label-adblock">Pemblokir Iklan (DNS)</label>
+                <select id="setting-adblock-dns" class="setting-select">
+                  <option value="bebasid">🛡️ BebasID DNS</option>
+                  <option value="openbld">🛡️ OpenBLD</option>
+                  <option value="nextdns">🛡️ NextDNS</option>
+                  <option value="adguard">🛡️ AdGuard DNS</option>
+                  <option value="off">🚫 Off</option>
+                </select>
+              </div>
+              <div id="adblock-custom-row" class="settings-row hidden">
+                <label id="label-adblock-doh">URL DNS-over-HTTPS</label>
+                <input type="url" id="setting-adblock-doh" class="setting-input"
+                  placeholder="https://dns.nextdns.io/xxxxxx">
+              </div>
+              <div id="adblock-signup-row" class="settings-row hidden">
+                <span id="adblock-signup-text" class="settings-hint"></span>
+              </div>
+            </div>
 
             <!-- Appearance -->
-            <section class="settings-section">
-              <h3 id="settings-appearance-title">Tampilan</h3>
+            <div class="settings-tab-content" data-settings-content="appearance">
               <div class="settings-row">
                 <label id="label-theme">Tema</label>
                 <div class="theme-options">
@@ -304,11 +389,10 @@
                   <option value="slate">⚫ Slate</option>
                 </select>
               </div>
-            </section>
+            </div>
 
             <!-- Security -->
-            <section class="settings-section">
-              <h3 id="settings-security-title">Keamanan</h3>
+            <div class="settings-tab-content" data-settings-content="security">
               <div class="settings-row">
                 <label id="label-autolock">Kunci otomatis setelah</label>
                 <select id="setting-autolock" class="setting-select">
@@ -330,11 +414,10 @@
                   <button id="btn-disable-pin" class="btn btn-sm btn-danger hidden">Nonaktifkan</button>
                 </div>
               </div>
-            </section>
+            </div>
 
-            <!-- Keyboard Shortcuts -->
-            <section class="settings-section">
-              <h3 id="settings-shortcuts-title">Pintasan Keyboard</h3>
+            <!-- Shortcuts -->
+            <div class="settings-tab-content" data-settings-content="shortcuts">
               <div class="shortcuts-list">
                 <div class="shortcut-item"><kbd>Ctrl+L</kbd><span id="sc-lock">Kunci aplikasi</span></div>
                 <div class="shortcut-item"><kbd>Ctrl+,</kbd><span id="sc-settings">Buka pengaturan</span></div>
@@ -346,11 +429,10 @@
                 </div>
                 <div class="shortcut-item"><kbd>F11</kbd><span id="sc-fullscreen">Mode layar penuh</span></div>
               </div>
-            </section>
+            </div>
 
             <!-- About -->
-            <section class="settings-section">
-              <h3 id="settings-about-title">Tentang</h3>
+            <div class="settings-tab-content" data-settings-content="about">
               <div class="about-info">
                 <div class="about-logo">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
@@ -364,7 +446,7 @@
                 <p class="about-desc">Multi-messenger app by Rijanara</p>
                 <p class="about-license">MIT License &copy; 2026</p>
               </div>
-            </section>
+            </div>
           </div>
         </div>
       </div>
@@ -456,6 +538,21 @@
           <p id="upload-text">Klik untuk memilih gambar</p>
           <p class="upload-hint">PNG, JPG, GIF, SVG, WebP</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rename Modal -->
+  <div id="rename-overlay" class="modal-overlay hidden">
+    <div class="rename-modal">
+      <div class="rename-modal-header">
+        <h3 id="rename-modal-title">Ubah Nama Layanan</h3>
+        <button id="rename-modal-close" class="btn-icon">&times;</button>
+      </div>
+      <input type="text" id="rename-input" class="setting-input" placeholder="Masukkan nama baru" maxlength="50">
+      <div class="rename-modal-actions">
+        <button id="rename-cancel" class="btn btn-ghost">Batal</button>
+        <button id="rename-save" class="btn btn-primary">Simpan</button>
       </div>
     </div>
   </div>

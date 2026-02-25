@@ -58,6 +58,7 @@ contextBridge.exposeInMainWorld('rijanbox', {
     },
     app: {
         getVersion: () => ipcRenderer.invoke('app:get-version'),
+        getPlatform: () => process.platform,
     },
     dialog: {
         openImage: () => ipcRenderer.invoke('dialog:open-image'),

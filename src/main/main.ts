@@ -126,6 +126,42 @@ function resetAutoLockTimer(win: BrowserWindow): void {
     }
 }
 
+// ─── DNS Ad Blocker Config ───
+const DNS_PROVIDERS: Record<string, string> = {
+    bebasid: 'https://dns.bebasid.com/dns-query',
+    openbld: 'https://ada.openbld.net/dns-query',
+};
+
+function applyDnsConfig(): void {
+    const settings = store.get('settings');
+    const dns = settings.adblockDns || 'bebasid';
+
+    if (dns === 'off') {
+        // Reset to system default
+        app.configureHostResolver({
+            enableBuiltInResolver: true,
+            secureDnsMode: 'off',
+            secureDnsServers: [],
+        });
+        return;
+    }
+
+    let dohUrl: string = '';
+    if (dns === 'nextdns' || dns === 'adguard') {
+        dohUrl = settings.adblockCustomDoh || '';
+    } else {
+        dohUrl = DNS_PROVIDERS[dns] || DNS_PROVIDERS['bebasid'];
+    }
+
+    if (dohUrl) {
+        app.configureHostResolver({
+            enableBuiltInResolver: true,
+            secureDnsMode: 'secure',
+            secureDnsServers: [dohUrl],
+        });
+    }
+}
+
 app.on('ready', () => {
     registerIpcHandlers();
     mainWindow = createMainWindow();
@@ -136,6 +172,9 @@ app.on('ready', () => {
     // Apply stored auto-start setting for all platforms
     const settings = store.get('settings');
     app.setLoginItemSettings({ openAtLogin: settings.autoStart || false });
+
+    // Apply DNS config
+    applyDnsConfig();
 
     // Apply theme to native elements
     if (settings.theme === 'dark') {

@@ -14,9 +14,23 @@
     let catalogData = [];
     let contextMenuServiceId = null;
     let isLocked = false;
+    let renameServiceId = null;
+    let badgeCounts = {}; // track badge counts for homescreen
 
-    // Modern Chrome user-agent to prevent sites from blocking Electron's embedded browser
-    const CHROME_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
+    // Modern Chrome user-agents for different platforms to prevent detection issues
+    const UA_TEMPLATES = {
+        win32: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+        darwin: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+        linux: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+        default: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
+    };
+
+    function getModernUserAgent() {
+        const platform = window.rijanbox.app.getPlatform();
+        return UA_TEMPLATES[platform] || UA_TEMPLATES.default;
+    }
+
+    const CHROME_USER_AGENT = getModernUserAgent();
 
     // Color palette for service letters
     const COLORS = [
@@ -42,6 +56,7 @@
         await loadCatalog();
 
         renderSidebar();
+        renderHomescreen();
         applySettings();
         setupEventListeners();
         setupMainProcessListeners();
@@ -55,13 +70,8 @@
             showPinSetup();
         }
 
-        if (services.length > 0 && !pinEnabled) {
-            if (activeServiceId) {
-                activateService(activeServiceId);
-            } else {
-                activateService(services[0].id);
-            }
-        }
+        // Always show homescreen as default
+        showPanel('welcome');
     }
 
     // ─── i18n ───
@@ -96,17 +106,20 @@
             'pin-setup-desc': 'pin.setupDesc',
             'btn-create-pin': 'pin.create',
             'btn-skip-pin': 'pin.skip',
-            'welcome-tagline': 'app.tagline',
-            'welcome-add-text': 'sidebar.addService',
+            'homescreen-welcome': services.length > 0 ? 'homescreen.welcomeBack' : 'homescreen.welcome',
+            'homescreen-popular-title': 'homescreen.popularServices',
+            'homescreen-services-title': 'homescreen.yourServices',
+            'homescreen-catalog-text': 'homescreen.exploreCatalog',
+            'homescreen-explore-text': 'homescreen.exploreCatalog',
             'catalog-title': 'catalog.title',
             'custom-url-title': 'catalog.customUrl',
             'btn-add-custom-text': 'catalog.add',
             'settings-title': 'settings.title',
-            'settings-general-title': 'settings.general',
-            'settings-appearance-title': 'settings.appearance',
-            'settings-security-title': 'settings.security',
-            'settings-shortcuts-title': 'settings.shortcuts',
-            'settings-about-title': 'settings.about',
+            'tab-label-general': 'settings.general',
+            'tab-label-appearance': 'settings.appearance',
+            'tab-label-security': 'settings.security',
+            'tab-label-shortcuts': 'settings.shortcuts',
+            'tab-label-about': 'settings.about',
             'label-language': 'settings.language',
             'label-autostart': 'settings.autoStart',
             'label-minimized': 'settings.startMinimized',
@@ -175,6 +188,36 @@
         document.getElementById('icon-tab-emoji').textContent = t('iconPicker.emoji');
         document.getElementById('icon-tab-upload').textContent = t('iconPicker.upload');
         document.getElementById('upload-text').textContent = t('iconPicker.uploadText');
+
+        // Rename modal
+        document.getElementById('rename-modal-title').textContent = t('rename.title');
+        document.getElementById('rename-input').placeholder = t('rename.placeholder');
+        document.getElementById('rename-cancel').textContent = t('rename.cancel');
+        document.getElementById('rename-save').textContent = t('rename.save');
+
+        // Link open & adblock labels
+        const labelLinkOpen = document.getElementById('label-link-open');
+        if (labelLinkOpen) labelLinkOpen.textContent = t('settings.linkOpen');
+        const labelAdblock = document.getElementById('label-adblock');
+        if (labelAdblock) labelAdblock.textContent = t('settings.adblock');
+        const labelAdblockDoh = document.getElementById('label-adblock-doh');
+        if (labelAdblockDoh) labelAdblockDoh.textContent = t('settings.adblockCustomDoh');
+
+        // Link open select options
+        const linkSelect = document.getElementById('setting-link-open');
+        if (linkSelect) {
+            linkSelect.options[0].text = t('settings.linkInApp');
+            linkSelect.options[1].text = t('settings.linkExternal');
+        }
+
+        // Adblock off option
+        const adblockSelect = document.getElementById('setting-adblock-dns');
+        if (adblockSelect) {
+            adblockSelect.querySelector('option[value="off"]').text = '🚫 ' + t('settings.adblockOff');
+        }
+
+        // Update homescreen quote
+        updateHomescreenQuote();
     }
 
     // ─── Theme ───
@@ -195,6 +238,89 @@
 
     function applyColorTheme(colorTheme) {
         document.documentElement.setAttribute('data-color-theme', colorTheme || 'blue');
+    }
+
+    // ─── Homescreen ───
+    function renderHomescreen() {
+        const popularSection = document.getElementById('homescreen-popular');
+        const servicesSection = document.getElementById('homescreen-services');
+
+        if (services.length === 0) {
+            // New user: show popular catalog services
+            popularSection.classList.remove('hidden');
+            servicesSection.classList.add('hidden');
+
+            const grid = document.getElementById('homescreen-popular-grid');
+            grid.innerHTML = '';
+            const popular = catalogData.slice(0, 6);
+            popular.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'homescreen-card';
+                card.innerHTML = `
+                    <div class="hs-icon">
+                        <img src="${item.icon || ''}" onerror="this.style.display='none'; const el=document.createElement('span'); el.className='service-letter'; el.style.color='${getColorForName(item.name)}'; el.textContent='${item.name[0]}'; this.parentElement.appendChild(el);" alt="${item.name}">
+                    </div>
+                    <span class="hs-label">${item.name}</span>
+                `;
+                card.addEventListener('click', async () => {
+                    const newSvc = await window.rijanbox.services.add({
+                        name: item.name,
+                        url: item.url,
+                        category: item.category,
+                        icon: item.icon || '',
+                    });
+                    services.push(newSvc);
+                    renderSidebar();
+                    activateService(newSvc.id);
+                    showPanel('webview');
+                });
+                grid.appendChild(card);
+            });
+        } else {
+            // Returning user: show their services
+            popularSection.classList.add('hidden');
+            servicesSection.classList.remove('hidden');
+
+            const grid = document.getElementById('homescreen-services-grid');
+            grid.innerHTML = '';
+            services.forEach(svc => {
+                const card = document.createElement('div');
+                card.className = 'homescreen-card';
+
+                let iconHtml;
+                if (svc.icon && svc.icon.startsWith('emoji:')) {
+                    const emoji = svc.icon.replace('emoji:', '');
+                    iconHtml = `<span class="service-emoji">${emoji}</span>`;
+                } else if (svc.icon) {
+                    iconHtml = `<img src="${svc.icon}" onerror="this.style.display='none'; const el=document.createElement('span'); el.className='service-letter'; el.style.color='${getColorForName(svc.name)}'; el.textContent='${svc.name[0]}'; this.parentElement.appendChild(el);" alt="${svc.name}">`;
+                } else {
+                    iconHtml = `<span class="service-letter" style="color:${getColorForName(svc.name)}">${svc.name[0]}</span>`;
+                }
+
+                const badgeCount = badgeCounts[svc.id] || 0;
+                const badgeHtml = badgeCount > 0 ? `<span class="hs-badge">${badgeCount > 99 ? '99+' : badgeCount}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="hs-icon">${iconHtml}</div>
+                    <span class="hs-label">${svc.name}</span>
+                    ${badgeHtml}
+                `;
+                card.addEventListener('click', () => activateService(svc.id));
+                grid.appendChild(card);
+            });
+        }
+
+        updateHomescreenQuote();
+    }
+
+    function updateHomescreenQuote() {
+        const quoteEl = document.getElementById('homescreen-quote');
+        if (!quoteEl) return;
+        const quotes = t('homescreen.quotes');
+        if (Array.isArray(quotes) && quotes.length > 0) {
+            const idx = Math.floor(Math.random() * quotes.length);
+            quoteEl.textContent = '"' + quotes[idx] + '"';
+        }
     }
 
     // ─── Catalog ───
@@ -397,7 +523,9 @@
             // Many services show unread count in title, e.g. "(3) WhatsApp"
             const match = title.match(/\((\d+)\)/);
             if (match) {
-                updateBadge(svc.id, parseInt(match[1]));
+                const count = parseInt(match[1]);
+                updateBadge(svc.id, count);
+                badgeCounts[svc.id] = count;
                 if (!svc.muted && svc.notificationEnabled) {
                     window.rijanbox.notification.show({
                         title: svc.name,
@@ -407,7 +535,17 @@
                 }
             } else {
                 updateBadge(svc.id, 0);
+                badgeCounts[svc.id] = 0;
             }
+        });
+
+        // Link open behavior: intercept new-window events
+        wv.addEventListener('new-window', (e) => {
+            if (settings.linkOpenBehavior === 'external') {
+                e.preventDefault();
+                window.rijanbox.shell.openExternal(e.url);
+            }
+            // else: let it open normally in-app (default)
         });
 
         // Favicon update
@@ -444,6 +582,10 @@
         document.getElementById('webview-container').classList.toggle('hidden', panel !== 'webview');
         document.getElementById('catalog-panel').classList.toggle('hidden', panel !== 'catalog');
         document.getElementById('settings-panel').classList.toggle('hidden', panel !== 'settings');
+
+        if (panel === 'welcome') {
+            renderHomescreen();
+        }
 
         if (panel === 'catalog') {
             renderCatalog();
@@ -493,12 +635,8 @@
     function unlockApp() {
         isLocked = false;
         document.getElementById('lock-screen').classList.add('hidden');
-
-        if (services.length === 0) {
-            showPanel('welcome');
-        } else if (activeServiceId) {
-            activateService(activeServiceId);
-        }
+        // Always show homescreen after unlocking
+        showPanel('welcome');
     }
 
     function showPinSetup() {
@@ -529,7 +667,49 @@
         // Color theme dropdown
         document.getElementById('setting-color-theme').value = settings.colorTheme || 'blue';
 
+        // Link open behavior
+        document.getElementById('setting-link-open').value = settings.linkOpenBehavior || 'inapp';
+
+        // DNS adblock
+        document.getElementById('setting-adblock-dns').value = settings.adblockDns || 'bebasid';
+        updateAdblockUI();
+
         updatePinStatusUI();
+    }
+
+    function updateAdblockUI() {
+        const dns = settings.adblockDns || 'bebasid';
+        const customRow = document.getElementById('adblock-custom-row');
+        const signupRow = document.getElementById('adblock-signup-row');
+        const dohInput = document.getElementById('setting-adblock-doh');
+        const signupText = document.getElementById('adblock-signup-text');
+
+        if (dns === 'nextdns' || dns === 'adguard') {
+            customRow.classList.remove('hidden');
+            signupRow.classList.remove('hidden');
+            dohInput.value = settings.adblockCustomDoh || '';
+            if (dns === 'nextdns') {
+                dohInput.placeholder = 'https://dns.nextdns.io/xxxxxx';
+                signupText.innerHTML = `${t('settings.adblockSignup')} <a href="#" id="adblock-signup-link">my.nextdns.io</a>`;
+            } else {
+                dohInput.placeholder = 'https://d.adguard-dns.com/dns-query/xxxxxx';
+                signupText.innerHTML = `${t('settings.adblockSignup')} <a href="#" id="adblock-signup-link">adguard-dns.io</a>`;
+            }
+            // Signup link handler
+            const link = document.getElementById('adblock-signup-link');
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const url = dns === 'nextdns'
+                        ? 'https://my.nextdns.io'
+                        : 'https://adguard-dns.io';
+                    window.rijanbox.shell.openExternal(url);
+                });
+            }
+        } else {
+            customRow.classList.add('hidden');
+            signupRow.classList.add('hidden');
+        }
     }
 
     async function updatePinStatusUI() {
@@ -577,7 +757,9 @@
                 showPinSetup();
             }
         });
-        document.getElementById('btn-welcome-add').addEventListener('click', () => showPanel('catalog'));
+        // Homescreen buttons
+        document.getElementById('btn-homescreen-catalog').addEventListener('click', () => showPanel('catalog'));
+        document.getElementById('btn-homescreen-explore').addEventListener('click', () => showPanel('catalog'));
 
         // Catalog
         document.getElementById('btn-catalog-close').addEventListener('click', () => {
@@ -604,6 +786,18 @@
         // Settings close
         document.getElementById('btn-settings-close').addEventListener('click', () => {
             showPanel(services.length > 0 ? 'webview' : 'welcome');
+        });
+
+        // Settings tabs
+        document.querySelectorAll('.settings-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.settingsTab;
+                const content = document.querySelector(`.settings-tab-content[data-settings-content="${target}"]`);
+                if (content) content.classList.add('active');
+            });
         });
 
         // Settings changes
@@ -644,6 +838,23 @@
             settings.colorTheme = e.target.value;
             await window.rijanbox.settings.set('colorTheme', settings.colorTheme);
             applyColorTheme(settings.colorTheme);
+        });
+
+        // Link open behavior
+        document.getElementById('setting-link-open').addEventListener('change', async (e) => {
+            settings.linkOpenBehavior = e.target.value;
+            await window.rijanbox.settings.set('linkOpenBehavior', settings.linkOpenBehavior);
+        });
+
+        // DNS adblock
+        document.getElementById('setting-adblock-dns').addEventListener('change', async (e) => {
+            settings.adblockDns = e.target.value;
+            await window.rijanbox.settings.set('adblockDns', settings.adblockDns);
+            updateAdblockUI();
+        });
+        document.getElementById('setting-adblock-doh').addEventListener('change', async (e) => {
+            settings.adblockCustomDoh = e.target.value.trim();
+            await window.rijanbox.settings.set('adblockCustomDoh', settings.adblockCustomDoh);
         });
 
         // PIN - Unlock
@@ -701,17 +912,21 @@
         });
 
         // Context menu actions
-        document.getElementById('ctx-rename').addEventListener('click', async () => {
+        document.getElementById('ctx-rename').addEventListener('click', () => {
             if (!contextMenuServiceId) return;
-            const svc = services.find(s => s.id === contextMenuServiceId);
-            if (!svc) return;
-            const promptText = settings.language === 'en' ? 'Enter new name:' : 'Masukkan nama baru:';
-            const newName = prompt(promptText, svc.name);
-            if (!newName || newName.trim() === '' || newName.trim() === svc.name) return;
-            await window.rijanbox.services.update(contextMenuServiceId, { name: newName.trim() });
-            const idx = services.findIndex(s => s.id === contextMenuServiceId);
-            if (idx !== -1) services[idx].name = newName.trim();
-            renderSidebar();
+            openRenameModal(contextMenuServiceId);
+        });
+
+        // Rename modal actions
+        document.getElementById('rename-save').addEventListener('click', saveRename);
+        document.getElementById('rename-cancel').addEventListener('click', closeRenameModal);
+        document.getElementById('rename-modal-close').addEventListener('click', closeRenameModal);
+        document.getElementById('rename-overlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeRenameModal();
+        });
+        document.getElementById('rename-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') saveRename();
+            if (e.key === 'Escape') closeRenameModal();
         });
         document.getElementById('ctx-change-icon').addEventListener('click', () => {
             if (!contextMenuServiceId) return;
@@ -775,6 +990,40 @@
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
             if (settings.theme === 'auto') applyTheme('auto');
         });
+    }
+
+    // ─── Rename Modal ───
+    function openRenameModal(serviceId) {
+        renameServiceId = serviceId;
+        const svc = services.find(s => s.id === serviceId);
+        if (!svc) return;
+        const input = document.getElementById('rename-input');
+        input.value = svc.name;
+        document.getElementById('rename-overlay').classList.remove('hidden');
+        setTimeout(() => { input.focus(); input.select(); }, 50);
+    }
+
+    function closeRenameModal() {
+        document.getElementById('rename-overlay').classList.add('hidden');
+        renameServiceId = null;
+    }
+
+    async function saveRename() {
+        if (!renameServiceId) return;
+        const newName = document.getElementById('rename-input').value.trim();
+        if (!newName) return;
+
+        const svc = services.find(s => s.id === renameServiceId);
+        if (!svc || newName === svc.name) {
+            closeRenameModal();
+            return;
+        }
+
+        await window.rijanbox.services.update(renameServiceId, { name: newName });
+        const idx = services.findIndex(s => s.id === renameServiceId);
+        if (idx !== -1) services[idx].name = newName;
+        renderSidebar();
+        closeRenameModal();
     }
 
     // ─── Icon Picker ───

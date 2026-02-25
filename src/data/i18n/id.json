@@ -10,6 +10,21 @@
         "lock": "Kunci Aplikasi",
         "noServices": "Belum ada layanan.\nKlik + untuk menambahkan."
     },
+    "homescreen": {
+        "welcome": "Selamat Datang di RijanBox",
+        "welcomeBack": "Selamat datang kembali!",
+        "getStarted": "Mulai dengan menambahkan layanan favorit Anda",
+        "popularServices": "Layanan Populer",
+        "yourServices": "Layanan Anda",
+        "exploreCatalog": "Jelajahi Katalog",
+        "quotes": [
+            "Semua aplikasi pesan, di satu tempat yang aman.",
+            "Tetap terhubung, tetap terorganisir.",
+            "Kehidupan digital Anda, disederhanakan.",
+            "Satu aplikasi untuk mengelola semuanya.",
+            "Aman, ringan, dan elegan."
+        ]
+    },
     "catalog": {
         "title": "Katalog Layanan",
         "search": "Cari layanan...",
@@ -65,8 +80,22 @@
         "changePin": "Ubah PIN",
         "disablePin": "Nonaktifkan PIN",
         "enablePin": "Aktifkan PIN",
+        "linkOpen": "Buka tautan di",
+        "linkInApp": "Browser Dalam Aplikasi",
+        "linkExternal": "Browser Bawaan",
+        "adblock": "Pemblokir Iklan (DNS)",
+        "adblockProvider": "Penyedia DNS",
+        "adblockCustomDoh": "URL DNS-over-HTTPS",
+        "adblockSignup": "Daftar terlebih dahulu di",
+        "adblockOff": "Mati (Tanpa blokir iklan)",
         "back": "Kembali",
         "version": "Versi"
+    },
+    "rename": {
+        "title": "Ubah Nama Layanan",
+        "placeholder": "Masukkan nama baru",
+        "save": "Simpan",
+        "cancel": "Batal"
     },
     "contextMenu": {
         "rename": "Ubah Nama",

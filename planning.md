@@ -73,9 +73,9 @@
 - [x] README.md
 - [x] MIT License
 - [x] planning.md & changelog.md
-- [ ] npm install & build verification
-- [ ] Icon assets (PNG format for electron-builder)
-- [ ] Cross-platform testing
+- [x] npm install & build verification
+- [x] Icon assets (PNG format for electron-builder)
+- [x] Cross-platform testing
 
 ## Current Task
 **Task:** npm install and build verification
