@@ -218,6 +218,19 @@
         document.getElementById('rename-cancel').textContent = t('rename.cancel');
         document.getElementById('rename-save').textContent = t('rename.save');
 
+        // Update Banner
+        const updateTextEl = document.getElementById('update-banner-text');
+        if (updateTextEl) {
+            const versionSpan = document.getElementById('update-version');
+            const version = versionSpan ? versionSpan.textContent : '';
+            updateTextEl.innerHTML = t('updateBanner.text');
+            if (versionSpan) document.getElementById('update-version').textContent = version;
+        }
+        const btnDownloadExt = document.getElementById('btn-update-download');
+        if (btnDownloadExt) btnDownloadExt.textContent = t('updateBanner.download');
+        const btnCloseExt = document.getElementById('btn-update-close');
+        if (btnCloseExt) btnCloseExt.textContent = t('updateBanner.close');
+
         // Link open & adblock labels
         const labelLinkOpen = document.getElementById('label-link-open');
         if (labelLinkOpen) labelLinkOpen.textContent = t('settings.linkOpen');
@@ -1284,25 +1297,31 @@
     }
 
     // ─── Icon Picker ───
-    const EMOJI_LIST = [
-        '💬', '📱', '📧', '📨', '✉️', '💼', '🏢', '🎯', '🚀', '⭐',
-        '❤️', '🔥', '💡', '🎨', '🎵', '🎮', '📷', '🎥', '📺', '🌐',
-        '🔗', '📝', '📋', '📊', '📈', '💰', '🛒', '🔔', '🔑', '🔒',
-        '👤', '👥', '🏠', '🏫', '🎓', '📚', '✏️', '🖊️', '📌', '📎',
-        '🐱', '🐶', '🦊', '🐻', '🐼', '🦁', '🐸', '🐧', '🦋', '🌸',
-        '🌺', '🌻', '🌹', '🍀', '🌈', '☀️', '🌙', '⚡', '💎', '🎪',
-        '🏆', '🎖️', '🎁', '🎂', '🍕', '🍔', '☕', '🍵', '🎃', '🤖',
-        '👾', '🛡️', '⚙️', '🔧', '🧪', '📡', '💻', '🖥️', '⌨️', '🖨️',
-    ];
+    let EMOJI_LIST = [];
+
+    async function loadEmojis() {
+        if (EMOJI_LIST.length > 0) return;
+        try {
+            const res = await fetch('../data/emojis.json');
+            EMOJI_LIST = await res.json();
+        } catch (e) {
+            console.error('Failed to load emojis:', e);
+            EMOJI_LIST = ['😀', '❤️', '🔥', '⭐', '💼', '💻', '🎮', '🎵'];
+        }
+    }
 
     let iconPickerTargetId = null;
 
-    function openIconPicker(serviceId) {
+    async function openIconPicker(serviceId) {
         iconPickerTargetId = serviceId;
         const overlay = document.getElementById('icon-picker-overlay');
         const grid = document.getElementById('emoji-grid');
 
-        // Populate emoji grid
+        // Populate emoji grid if empty
+        if (EMOJI_LIST.length === 0) {
+            await loadEmojis();
+            grid.innerHTML = '';
+        }
         grid.innerHTML = '';
         EMOJI_LIST.forEach(emoji => {
             const btn = document.createElement('button');
@@ -1411,6 +1430,39 @@
         });
     }
 
+    // ─── Update Checker ───
+    async function checkForUpdates() {
+        try {
+            const currentVersion = '1.2.0';
+            const res = await fetch('https://api.github.com/repos/Rijanara-Teknologi/RijanBox/releases/latest');
+            if (!res.ok) return;
+            const data = await res.json();
+            const latestTag = data.tag_name;
+            const latestVersion = latestTag.replace(/^v/, '');
+
+            if (latestVersion !== currentVersion) {
+                const banner = document.getElementById('update-banner');
+                const versionSpan = document.getElementById('update-version');
+                if (versionSpan) versionSpan.textContent = latestVersion;
+                banner.classList.remove('hidden');
+
+                document.getElementById('btn-update-download').onclick = () => {
+                    const dlUrl = data.html_url || 'https://github.com/Rijanara-Teknologi/RijanBox/releases';
+                    window.rijanbox.window.openExternal(dlUrl);
+                };
+
+                document.getElementById('btn-update-close').onclick = () => {
+                    banner.classList.add('hidden');
+                };
+            }
+        } catch (e) {
+            console.error('Failed to check for updates:', e);
+        }
+    }
+
     // ─── Start ───
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        init();
+        checkForUpdates();
+    });
 })();

@@ -98,6 +98,25 @@
 
   <!-- ─── Main Layout ─── -->
   <div id="app-container">
+
+    <!-- Update Banner (Hidden by default) -->
+    <div id="update-banner" class="update-banner hidden">
+      <div class="update-banner-content">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+            stroke="currentColor" stroke-width="2" />
+          <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span id="update-banner-text">Pembaruan tersedia! (<span id="update-version"></span>). Unduh sekarang untuk
+          fitur terbaru.</span>
+      </div>
+      <div class="update-banner-actions">
+        <button id="btn-update-download" class="btn btn-primary btn-sm">Unduh</button>
+        <button id="btn-update-close" class="btn btn-ghost btn-sm">Tutup</button>
+      </div>
+    </div>
+
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-top">

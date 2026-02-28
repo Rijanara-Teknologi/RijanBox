@@ -134,5 +134,10 @@
         "toggleMute": "Bisukan/Bunyikan layanan aktif",
         "toggleSidebar": "Tampil/Sembunyikan sidebar",
         "fullscreen": "Mode layar penuh"
+    },
+    "updateBanner": {
+        "text": "Pembaruan tersedia! (<span id=\"update-version\"></span>). Unduh sekarang.",
+        "download": "Unduh",
+        "close": "Tutup"
     }
 }

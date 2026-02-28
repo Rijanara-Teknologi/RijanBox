@@ -134,5 +134,10 @@
         "toggleMute": "Mute/Unmute active service",
         "toggleSidebar": "Show/Hide sidebar",
         "fullscreen": "Toggle fullscreen"
+    },
+    "updateBanner": {
+        "text": "Update available! (<span id=\"update-version\"></span>). Download now.",
+        "download": "Download",
+        "close": "Close"
     }
 }
