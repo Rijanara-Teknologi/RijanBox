@@ -1495,5 +1495,9 @@
         if (btnManualUpdate) {
             btnManualUpdate.addEventListener('click', () => checkForUpdates(true));
         }
+
+        // Global drag and drop prevention to allow webviews to handle files
+        window.addEventListener('dragover', (e) => e.preventDefault(), false);
+        window.addEventListener('drop', (e) => e.preventDefault(), false);
     });
 })();
