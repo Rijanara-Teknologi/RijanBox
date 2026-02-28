@@ -310,5 +310,137 @@
         "url": "https://claude.ai",
         "category": "other",
         "icon": ""
+    },
+    {
+        "name": "DeepSeek",
+        "url": "https://chat.deepseek.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Perplexity",
+        "url": "https://www.perplexity.ai",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "YouTube",
+        "url": "https://www.youtube.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Apple Music",
+        "url": "https://music.apple.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Disney+",
+        "url": "https://www.disneyplus.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Linear",
+        "url": "https://linear.app",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Monday.com",
+        "url": "https://monday.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Miro",
+        "url": "https://miro.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Vercel",
+        "url": "https://vercel.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Stack Overflow",
+        "url": "https://stackoverflow.com",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "Zoom",
+        "url": "https://app.zoom.us/wc",
+        "category": "work",
+        "icon": ""
+    },
+    {
+        "name": "eBay",
+        "url": "https://www.ebay.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "AliExpress",
+        "url": "https://www.aliexpress.com",
+        "category": "other",
+        "icon": ""
+    },
+    {
+        "name": "Quora",
+        "url": "https://www.quora.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "VKontakte",
+        "url": "https://vk.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Medium",
+        "url": "https://medium.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Weibo",
+        "url": "https://weibo.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Bilibili",
+        "url": "https://www.bilibili.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Zhihu",
+        "url": "https://www.zhihu.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Douyin",
+        "url": "https://www.douyin.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "Xiaohongshu",
+        "url": "https://www.xiaohongshu.com",
+        "category": "social",
+        "icon": ""
+    },
+    {
+        "name": "DingTalk",
+        "url": "https://www.dingtalk.com",
+        "category": "work",
+        "icon": ""
     }
 ]

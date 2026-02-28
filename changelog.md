@@ -1,5 +1,12 @@
 # RijanBox - Changelog
 
+## [1.2.0] - 2026-02-28
+### Added
+- **Local Favicons** — Offline-capable local favicon caching system to speed up the Homescreen and Catalog image loading.
+- **Catalog Expansion** — Added 14 new popular services (Claude, DeepSeek, Perplexity, YouTube, Linear, Monday, DingTalk, Bilibili, AliExpress, etc.).
+- **Background Actions** — Unmuted Webview notification sounds can now play reliably in the background without user gestures.
+- **Improved Context Menu** — Fixed an issue where external links opening required special flags, now smoothly integrated with a right-click "Open in external browser" option.
+
 ## [1.1.0] - 2026-02-25
 ### Added
 - **Service Hibernation** — Save RAM by right-clicking a service and selecting "Hibernate".

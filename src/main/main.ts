@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, powerMonitor, session, shell, Menu } from 'electron';
+import { app, BrowserWindow, globalShortcut, powerMonitor, shell, Menu, protocol, net } from 'electron';
 import * as path from 'path';
 import { createTray, destroyTray } from './tray';
 import { registerIpcHandlers } from './ipc-handlers';
@@ -167,6 +167,14 @@ function applyDnsConfig(): void {
 
 app.on('ready', () => {
     registerIpcHandlers();
+
+    protocol.handle('assets', (request) => {
+        let url = request.url.replace('assets://', '');
+        if (url.startsWith('/')) url = url.substring(1);
+        const absolutePath = path.join(__dirname, '../../assets', url);
+        return net.fetch('file://' + absolutePath);
+    });
+
     mainWindow = createMainWindow();
     createTray(mainWindow);
     registerShortcuts(mainWindow);

@@ -283,14 +283,14 @@
                 const remoteFallback = `https://twenty-icons.com/${new URL(item.url).hostname}/64`;
                 card.innerHTML = `
                     <div class="hs-icon">
-                        <img class="svc-icon-img" src="../assets/favicons/${id}.png" alt="${item.name}" data-remote="${remoteFallback}" data-name="${item.name}" data-local="../assets/favicons/${id}.png">
+                        <img class="svc-icon-img" src="assets://favicons/${id}.png" alt="${item.name}" data-remote="${remoteFallback}" data-name="${item.name}" data-local="assets://favicons/${id}.png">
                     </div>
                     <span class="hs-label">${item.name}</span>
                 `;
                 const imgEl = card.querySelector('.svc-icon-img');
                 if (imgEl) {
                     imgEl.addEventListener('error', function () {
-                        if (this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                        if (this.src.includes('assets://favicons/')) {
                             this.src = this.dataset.remote;
                         } else {
                             const name = this.dataset.name;
@@ -361,7 +361,7 @@
                 const imgEl = card.querySelector('.svc-icon-img');
                 if (imgEl) {
                     imgEl.addEventListener('error', function () {
-                        if (this.dataset.local && this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                        if (this.dataset.local && this.src.includes('assets://favicons/')) {
                             this.src = this.dataset.remote;
                         } else {
                             const name = this.dataset.name;
@@ -463,7 +463,7 @@
 
             item.innerHTML = `
         <div class="catalog-item-icon" style="background:${color}">
-          <img class="svc-icon-img" src="../assets/favicons/${id}.png" alt="${svc.name}" data-remote="${remoteFallback}" data-name="${svc.name}" data-local="../assets/favicons/${id}.png">
+          <img class="svc-icon-img" src="assets://favicons/${id}.png" alt="${svc.name}" data-remote="${remoteFallback}" data-name="${svc.name}" data-local="assets://favicons/${id}.png">
         </div>
         <span class="catalog-item-name">${svc.name}</span>
       `;
@@ -471,7 +471,7 @@
             const imgEl = item.querySelector('.svc-icon-img');
             if (imgEl) {
                 imgEl.addEventListener('error', function () {
-                    if (this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                    if (this.src.includes('assets://favicons/')) {
                         this.src = this.dataset.remote;
                     } else {
                         const name = this.dataset.name;
@@ -488,7 +488,7 @@
 
     async function addServiceFromCatalog(svc) {
         const id = svc.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const localIconPath = `../assets/favicons/${id}.png`;
+        const localIconPath = `assets://favicons/${id}.png`;
 
         const newService = await window.rijanbox.services.add({
             name: svc.name,
@@ -581,7 +581,7 @@
             imgEl = item.querySelector('.svc-icon-img');
             if (imgEl) {
                 imgEl.addEventListener('error', function () {
-                    if (this.dataset.local && this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                    if (this.dataset.local && this.src.includes('assets://favicons/')) {
                         this.src = this.dataset.remote;
                     } else {
                         const name = this.dataset.name;
