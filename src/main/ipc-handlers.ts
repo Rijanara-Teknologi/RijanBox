@@ -197,6 +197,34 @@ export function registerIpcHandlers(): void {
         return app.getVersion();
     });
 
+    ipcMain.handle('app:check-update', async () => {
+        try {
+            const fetchConfig = {
+                headers: {
+                    'User-Agent': `RijanBox/${app.getVersion()}`
+                }
+            };
+            // Web Fetch API is available in modern Node.js
+            const res = await fetch('https://api.github.com/repos/Rijanara-Teknologi/RijanBox/releases/latest', fetchConfig);
+            if (!res.ok) {
+                if (res.status === 403) throw new Error('API Rate Limit (403). Coba lagi nanti.');
+                throw new Error(`HTTP Error ${res.status}`);
+            }
+            const data: any = await res.json();
+            return {
+                success: true,
+                tag_name: data.tag_name,
+                html_url: data.html_url
+            };
+        } catch (err: any) {
+            console.error('Update Check Error:', err);
+            return {
+                success: false,
+                error: err.message || 'Network error'
+            };
+        }
+    });
+
     // ─── File Dialog for Icon Upload ───
     ipcMain.handle('dialog:open-image', async () => {
         const wins = BrowserWindow.getAllWindows();

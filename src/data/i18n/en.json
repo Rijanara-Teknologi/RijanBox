@@ -138,6 +138,9 @@
     "updateBanner": {
         "text": "Update available! (<span id=\"update-version\"></span>). Download now.",
         "download": "Download",
-        "close": "Close"
+        "close": "Close",
+        "checkLabel": "Check for Updates",
+        "checkingLabel": "Checking...",
+        "upToDate": "App is up to date."
     }
 }

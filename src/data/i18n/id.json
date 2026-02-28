@@ -138,6 +138,9 @@
     "updateBanner": {
         "text": "Pembaruan tersedia! (<span id=\"update-version\"></span>). Unduh sekarang.",
         "download": "Unduh",
-        "close": "Tutup"
+        "close": "Tutup",
+        "checkLabel": "Cek Pembaruan",
+        "checkingLabel": "Sedang memeriksa...",
+        "upToDate": "Aplikasi sudah versi terbaru."
     }
 }

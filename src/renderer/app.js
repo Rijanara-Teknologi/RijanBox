@@ -47,6 +47,10 @@
 
     // ─── Initialize ───
     async function init() {
+        const appVer = await window.rijanbox.app.getVersion();
+        const verEl = document.getElementById('app-version');
+        if (verEl) verEl.textContent = appVer;
+
         settings = await window.rijanbox.settings.get();
         await loadLanguage(settings.language || 'id');
         applyTheme(settings.theme || 'auto');
@@ -230,6 +234,9 @@
         if (btnDownloadExt) btnDownloadExt.textContent = t('updateBanner.download');
         const btnCloseExt = document.getElementById('btn-update-close');
         if (btnCloseExt) btnCloseExt.textContent = t('updateBanner.close');
+
+        const btnCheckUpdate = document.getElementById('check-update-text');
+        if (btnCheckUpdate) btnCheckUpdate.textContent = t('updateBanner.checkLabel');
 
         // Link open & adblock labels
         const labelLinkOpen = document.getElementById('label-link-open');
@@ -1431,13 +1438,22 @@
     }
 
     // ─── Update Checker ───
-    async function checkForUpdates() {
+    async function checkForUpdates(manual = false) {
+        const btnCheck = document.getElementById('btn-check-update');
+        const textCheck = document.getElementById('check-update-text');
+
+        if (manual && btnCheck) {
+            btnCheck.disabled = true;
+            if (textCheck) textCheck.textContent = t('updateBanner.checkingLabel');
+        }
+
         try {
-            const currentVersion = '1.2.0';
-            const res = await fetch('https://api.github.com/repos/Rijanara-Teknologi/RijanBox/releases/latest');
-            if (!res.ok) return;
-            const data = await res.json();
-            const latestTag = data.tag_name;
+            const currentVersion = await window.rijanbox.app.getVersion();
+            const res = await window.rijanbox.app.checkUpdate();
+
+            if (!res.success) throw new Error(res.error || 'Network error');
+
+            const latestTag = res.tag_name;
             const latestVersion = latestTag.replace(/^v/, '');
 
             if (latestVersion !== currentVersion) {
@@ -1447,16 +1463,26 @@
                 banner.classList.remove('hidden');
 
                 document.getElementById('btn-update-download').onclick = () => {
-                    const dlUrl = data.html_url || 'https://github.com/Rijanara-Teknologi/RijanBox/releases';
-                    window.rijanbox.window.openExternal(dlUrl);
+                    const dlUrl = res.html_url || 'https://github.com/Rijanara-Teknologi/RijanBox/releases';
+                    window.rijanbox.shell.openExternal(dlUrl);
                 };
 
                 document.getElementById('btn-update-close').onclick = () => {
                     banner.classList.add('hidden');
                 };
+            } else if (manual) {
+                alert(t('updateBanner.upToDate'));
+                const banner = document.getElementById('update-banner');
+                if (banner) banner.classList.add('hidden');
             }
         } catch (e) {
             console.error('Failed to check for updates:', e);
+            if (manual) alert('Gagal memuat status rilis: ' + e.message);
+        } finally {
+            if (manual && btnCheck) {
+                btnCheck.disabled = false;
+                if (textCheck) textCheck.textContent = t('updateBanner.checkLabel');
+            }
         }
     }
 
@@ -1464,5 +1490,10 @@
     document.addEventListener('DOMContentLoaded', () => {
         init();
         checkForUpdates();
+
+        const btnManualUpdate = document.getElementById('btn-check-update');
+        if (btnManualUpdate) {
+            btnManualUpdate.addEventListener('click', () => checkForUpdates(true));
+        }
     });
 })();
