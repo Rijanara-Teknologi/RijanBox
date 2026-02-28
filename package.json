@@ -1,6 +1,6 @@
 {
   "name": "rijanbox",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Multi-messenger app - Manage unlimited social media accounts in one secure, lightweight desktop app",
   "main": "dist/main/main.js",
   "author": {

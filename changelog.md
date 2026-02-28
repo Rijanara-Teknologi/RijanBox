@@ -1,6 +1,6 @@
 # RijanBox - Changelog
 
-## [1.2.0] - 2026-02-28
+## [1.2.1] - 2026-02-28
 ### Added
 - **In-App Update Readiness** — Real-time GitHub release tracking with a dedicated update banner on startup and a manual "Check for Updates" button in About settings.
 - **Expanded Emoji Picker** — Restructured emoji data into `emojis.json` to prevent IDE crashes and expanded library to over 200+ high-quality unicode emojis.
