@@ -279,12 +279,30 @@
             popular.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'homescreen-card';
+                const id = item.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const remoteFallback = `https://twenty-icons.com/${new URL(item.url).hostname}/64`;
                 card.innerHTML = `
                     <div class="hs-icon">
-                        <img src="${item.icon || ''}" onerror="this.style.display='none'; const el=document.createElement('span'); el.className='service-letter'; el.style.color='${getColorForName(item.name)}'; el.textContent='${item.name[0]}'; this.parentElement.appendChild(el);" alt="${item.name}">
+                        <img class="svc-icon-img" src="../assets/favicons/${id}.png" alt="${item.name}" data-remote="${remoteFallback}" data-name="${item.name}" data-local="../assets/favicons/${id}.png">
                     </div>
                     <span class="hs-label">${item.name}</span>
                 `;
+                const imgEl = card.querySelector('.svc-icon-img');
+                if (imgEl) {
+                    imgEl.addEventListener('error', function () {
+                        if (this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                            this.src = this.dataset.remote;
+                        } else {
+                            const name = this.dataset.name;
+                            const el = document.createElement('span');
+                            el.className = 'service-letter';
+                            el.style.color = getColorForName(name);
+                            el.textContent = name[0];
+                            this.parentElement.appendChild(el);
+                            this.style.display = 'none';
+                        }
+                    });
+                }
                 card.addEventListener('click', async () => {
                     const newSvc = await window.rijanbox.services.add({
                         name: item.name,
@@ -311,11 +329,13 @@
                 card.className = 'homescreen-card' + (svc.hibernated ? ' hibernated' : '');
 
                 let iconHtml;
+                const remoteFallback = `https://twenty-icons.com/${new URL(svc.url).hostname}/64`;
+
                 if (svc.icon && svc.icon.startsWith('emoji:')) {
                     const emoji = svc.icon.replace('emoji:', '');
                     iconHtml = `<span class="service-emoji">${emoji}</span>`;
                 } else if (svc.icon) {
-                    iconHtml = `<img src="${svc.icon}" onerror="this.style.display='none'; const el=document.createElement('span'); el.className='service-letter'; el.style.color='${getColorForName(svc.name)}'; el.textContent='${svc.name[0]}'; this.parentElement.appendChild(el);" alt="${svc.name}">`;
+                    iconHtml = `<img class="svc-icon-img" src="${svc.icon}" data-remote="${remoteFallback}" data-name="${svc.name}" alt="${svc.name}" data-local="${svc.icon}">`;
                 } else {
                     iconHtml = `<span class="service-letter" style="color:${getColorForName(svc.name)}">${svc.name[0]}</span>`;
                 }
@@ -337,6 +357,23 @@
                     ${badgeHtml}
                     ${hibernateIcon}
                 `;
+
+                const imgEl = card.querySelector('.svc-icon-img');
+                if (imgEl) {
+                    imgEl.addEventListener('error', function () {
+                        if (this.dataset.local && this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                            this.src = this.dataset.remote;
+                        } else {
+                            const name = this.dataset.name;
+                            const el = document.createElement('span');
+                            el.className = 'service-letter';
+                            el.style.color = getColorForName(name);
+                            el.textContent = name[0];
+                            this.parentElement.appendChild(el);
+                            this.style.display = 'none';
+                        }
+                    });
+                }
                 card.addEventListener('click', () => activateService(svc.id));
                 card.addEventListener('contextmenu', (e) => showHomescreenContextMenu(e, svc.id));
                 grid.appendChild(card);
@@ -420,15 +457,29 @@
             item.dataset.url = svc.url;
             item.dataset.category = svc.category;
 
+            const id = svc.name.toLowerCase().replace(/[^a-z0-9]/g, '');
             const color = getColorForName(svc.name);
+            const remoteFallback = `https://twenty-icons.com/${new URL(svc.url).hostname}/64`;
+
             item.innerHTML = `
         <div class="catalog-item-icon" style="background:${color}">
-          <img src="https://www.google.com/s2/favicons?domain=${new URL(svc.url).hostname}&sz=64" 
-               onerror="this.style.display='none'; this.parentElement.textContent='${svc.name[0]}'"
-               alt="${svc.name}">
+          <img class="svc-icon-img" src="../assets/favicons/${id}.png" alt="${svc.name}" data-remote="${remoteFallback}" data-name="${svc.name}" data-local="../assets/favicons/${id}.png">
         </div>
         <span class="catalog-item-name">${svc.name}</span>
       `;
+
+            const imgEl = item.querySelector('.svc-icon-img');
+            if (imgEl) {
+                imgEl.addEventListener('error', function () {
+                    if (this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                        this.src = this.dataset.remote;
+                    } else {
+                        const name = this.dataset.name;
+                        this.parentElement.textContent = name[0];
+                        this.style.display = 'none';
+                    }
+                });
+            }
 
             item.addEventListener('click', () => addServiceFromCatalog(svc));
             grid.appendChild(item);
@@ -436,12 +487,14 @@
     }
 
     async function addServiceFromCatalog(svc) {
-        const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(svc.url).hostname}&sz=64`;
+        const id = svc.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const localIconPath = `../assets/favicons/${id}.png`;
+
         const newService = await window.rijanbox.services.add({
             name: svc.name,
             url: svc.url,
             category: svc.category,
-            icon: faviconUrl,
+            icon: localIconPath, // Save local icon to store
         });
         services.push(newService);
         renderSidebar();
@@ -465,7 +518,7 @@
 
         let faviconUrl = '';
         try {
-            faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+            faviconUrl = `https://twenty-icons.com/${new URL(url).hostname}/64`;
         } catch { /* ignore */ }
 
         const newService = await window.rijanbox.services.add({
@@ -509,17 +562,37 @@
             item.dataset.tooltip = svc.name;
 
             const color = getColorForName(svc.name);
+            let imgEl = null;
+
             if (svc.icon && svc.icon.startsWith('emoji:')) {
                 const emoji = svc.icon.replace('emoji:', '');
                 item.innerHTML = `<span class="service-emoji">${emoji}</span>`;
             } else if (svc.icon) {
-                item.innerHTML = `<img src="${svc.icon}" onerror="this.style.display='none'; const el=document.createElement('span'); el.className='service-letter'; el.textContent='${svc.name[0]}'; this.parentElement.appendChild(el);" alt="${svc.name}">`;
+                const remoteFallback = `https://twenty-icons.com/${new URL(svc.url).hostname}/64`;
+                item.innerHTML = `<img class="svc-icon-img" src="${svc.icon}" data-remote="${remoteFallback}" data-name="${svc.name}" alt="${svc.name}" data-local="${svc.icon}">`;
             } else {
                 item.innerHTML = `<span class="service-letter" style="color:${color}">${svc.name[0]}</span>`;
             }
 
             if (svc.muted) {
                 item.innerHTML += `<svg class="mute-icon" viewBox="0 0 24 24" fill="none"><path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="2"/><path d="M23 9l-6 6M17 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+            }
+
+            imgEl = item.querySelector('.svc-icon-img');
+            if (imgEl) {
+                imgEl.addEventListener('error', function () {
+                    if (this.dataset.local && this.src.endsWith(this.dataset.local.replace('../', ''))) {
+                        this.src = this.dataset.remote;
+                    } else {
+                        const name = this.dataset.name;
+                        const el = document.createElement('span');
+                        el.className = 'service-letter';
+                        el.style.color = getColorForName(name);
+                        el.textContent = name[0];
+                        this.parentElement.appendChild(el);
+                        this.style.display = 'none';
+                    }
+                });
             }
 
             item.addEventListener('click', () => activateService(svc.id));

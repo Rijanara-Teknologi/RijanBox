@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, powerMonitor, session } from 'electron';
+import { app, BrowserWindow, globalShortcut, powerMonitor, session, shell, Menu } from 'electron';
 import * as path from 'path';
 import { createTray, destroyTray } from './tray';
 import { registerIpcHandlers } from './ipc-handlers';
@@ -12,6 +12,9 @@ app.name = 'RijanBox';
 if (process.platform === 'win32') {
     app.setAppUserModelId('RijanBox');
 }
+
+// Override Chromium autoplay policy to allow notification sounds in background webviews
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 function createMainWindow(): BrowserWindow {
     const win = new BrowserWindow({
@@ -168,6 +171,33 @@ app.on('ready', () => {
     createTray(mainWindow);
     registerShortcuts(mainWindow);
     setupAutoLock(mainWindow);
+
+    // Global webview handling for external links and context menus
+    app.on('web-contents-created', (_event, contents) => {
+        if (contents.getType() === 'webview') {
+            contents.setWindowOpenHandler(({ url }) => {
+                const settings = store.get('settings');
+                if (settings.linkOpenBehavior === 'external') {
+                    shell.openExternal(url);
+                    return { action: 'deny' };
+                }
+                return { action: 'allow' };
+            });
+
+            contents.on('context-menu', (_e, params) => {
+                if (params.linkURL) {
+                    const settings = store.get('settings');
+                    const menu = Menu.buildFromTemplate([
+                        {
+                            label: settings.language === 'en' ? 'Open link in external browser' : 'Buka tautan di browser eksternal',
+                            click: () => shell.openExternal(params.linkURL)
+                        }
+                    ]);
+                    menu.popup();
+                }
+            });
+        }
+    });
 
     // Apply stored auto-start setting for all platforms
     const settings = store.get('settings');
