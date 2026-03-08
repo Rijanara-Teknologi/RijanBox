@@ -1,5 +1,14 @@
 # RijanBox - Changelog
 
+## [1.2.2] - 2026-03-08
+### Added
+- **Notification Center** — Centralized local notification history stored securely in a local SQLite database, allowing you to access missed alerts from any service across the app.
+- **Multilingual Support** — Dynamic translation bindings (English/Indonesian) integrated for the new Notification Center.
+
+### Fixed
+- **Auto Lock typing interruption** — Fixed an issue where the application would unexpectedly lock while the user was actively typing a message, by changing the activity listener to `keyup` events.
+- **UI Elements** — Removed redundant close (X) buttons from the Catalog and Notification Center layouts.
+
 ## [1.2.1] - 2026-02-28
 ### Added
 - **In-App Update Readiness** — Real-time GitHub release tracking with a dedicated update banner on startup and a manual "Check for Updates" button in About settings.

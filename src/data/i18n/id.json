@@ -61,6 +61,12 @@
         "maxLength": "PIN maksimal 8 digit",
         "skip": "Lewati"
     },
+    "notificationCenter": {
+        "title": "Pusat Pemberitahuan",
+        "empty": "Belum ada notifikasi",
+        "clearAll": "Hapus Semua",
+        "newNotifications": "notifikasi baru"
+    },
     "settings": {
         "title": "Pengaturan",
         "general": "Umum",

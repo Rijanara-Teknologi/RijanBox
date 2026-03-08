@@ -61,6 +61,12 @@
         "maxLength": "PIN cannot exceed 8 digits",
         "skip": "Skip"
     },
+    "notificationCenter": {
+        "title": "Notification Center",
+        "empty": "No notifications yet",
+        "clearAll": "Clear All",
+        "newNotifications": "new notification(s)"
+    },
     "settings": {
         "title": "Settings",
         "general": "General",

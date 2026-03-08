@@ -146,6 +146,17 @@
             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
         </button>
+        <button id="btn-notifications" class="sidebar-action" title="Pusat Pemberitahuan">
+          <div class="notification-badge-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <span id="notif-dot" class="notif-dot hidden"></span>
+          </div>
+        </button>
         <button id="btn-settings" class="sidebar-action" title="Pengaturan">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" stroke-width="2" />
@@ -230,16 +241,28 @@
       <!-- Webview Container -->
       <div id="webview-container" class="content-panel hidden"></div>
 
+      <!-- Notification Center Panel -->
+      <div id="notifications-panel" class="content-panel hidden">
+        <div class="catalog-wrapper">
+          <div class="catalog-header" style="justify-content: space-between;">
+            <h2 id="notifications-title">Pusat Pemberitahuan</h2>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-notifications-clear" class="btn btn-ghost btn-sm">Hapus Semua</button>
+            </div>
+          </div>
+          <div id="notifications-list" class="notifications-list">
+            <div class="sidebar-empty">
+              <span id="notifications-empty">Belum ada notifikasi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Add Service / Catalog Panel -->
       <div id="catalog-panel" class="content-panel hidden">
         <div class="catalog-wrapper">
           <div class="catalog-header">
             <h2 id="catalog-title">Katalog Layanan</h2>
-            <button id="btn-catalog-close" class="btn-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
-            </button>
           </div>
 
           <!-- Search -->

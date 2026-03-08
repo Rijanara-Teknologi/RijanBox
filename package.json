@@ -1,6 +1,6 @@
 {
   "name": "rijanbox",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Multi-messenger app - Manage unlimited social media accounts in one secure, lightweight desktop app",
   "main": "dist/main/main.js",
   "author": {
@@ -59,9 +59,13 @@
     }
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.3.0",
     "electron": "^33.0.0",
     "electron-builder": "^25.0.0",
     "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2"
   }
 }

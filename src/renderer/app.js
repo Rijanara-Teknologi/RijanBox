@@ -16,6 +16,7 @@
     let isLocked = false;
     let renameServiceId = null;
     let badgeCounts = {}; // track badge counts for homescreen
+    let notificationsHistory = []; // track notifications for the session
 
     // Modern Chrome user-agents for different platforms to prevent detection issues
     const UA_TEMPLATES = {
@@ -153,6 +154,10 @@
             'btn-add-service': { key: 'sidebar.addService', attr: 'title' },
             'btn-settings': { key: 'sidebar.settings', attr: 'title' },
             'btn-lock': { key: 'sidebar.lock', attr: 'title' },
+            'btn-notifications': { key: 'notificationCenter.title', attr: 'title' },
+            'notifications-title': 'notificationCenter.title',
+            'btn-notifications-clear': 'notificationCenter.clearAll',
+            'notifications-empty': 'notificationCenter.empty'
         };
 
         for (const [id, value] of Object.entries(map)) {
@@ -679,9 +684,11 @@
         wv.addEventListener('ipc-message', (e) => {
             if (e.channel === 'notification') {
                 if (!svc.muted && svc.notificationEnabled) {
+                    const body = e.args[0] || 'New message';
+                    logNotification(svc, body);
                     window.rijanbox.notification.show({
                         title: svc.name,
-                        body: e.args[0] || 'New message',
+                        body: body,
                         serviceId: svc.id,
                     });
                 }
@@ -698,9 +705,11 @@
                 updateBadge(svc.id, count);
                 badgeCounts[svc.id] = count;
                 if (!svc.muted && svc.notificationEnabled) {
+                    const body = `${match[1]} ${t('notificationCenter.newNotifications')}`;
+                    logNotification(svc, body);
                     window.rijanbox.notification.show({
                         title: svc.name,
-                        body: `${match[1]} new notification(s)`,
+                        body: body,
                         serviceId: svc.id,
                     });
                 }
@@ -753,6 +762,7 @@
         document.getElementById('webview-container').classList.toggle('hidden', panel !== 'webview');
         document.getElementById('catalog-panel').classList.toggle('hidden', panel !== 'catalog');
         document.getElementById('settings-panel').classList.toggle('hidden', panel !== 'settings');
+        document.getElementById('notifications-panel').classList.toggle('hidden', panel !== 'notifications');
 
         if (panel === 'welcome') {
             renderHomescreen();
@@ -761,6 +771,10 @@
         if (panel === 'catalog') {
             renderCatalog();
             document.getElementById('catalog-search-input').focus();
+        }
+
+        if (panel === 'notifications') {
+            renderNotifications();
         }
     }
 
@@ -957,6 +971,109 @@
         window.rijanbox.signalActivity();
     }
 
+    // ─── Notification Center ───
+    async function logNotification(svc, body) {
+        await window.rijanbox.db.saveNotification({
+            serviceId: svc.id,
+            title: svc.name,
+            body: body,
+            timestamp: Date.now()
+        });
+
+        const badge = document.getElementById('notif-dot');
+        if (badge) badge.classList.remove('hidden');
+
+        if (currentPanel === 'notifications') {
+            await renderNotifications();
+        }
+    }
+
+    async function renderNotifications() {
+        const list = document.getElementById('notifications-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+        const history = await window.rijanbox.db.getNotifications();
+
+        if (history.length === 0) {
+            list.innerHTML = `<div class="sidebar-empty"><span id="notifications-empty">${t('notificationCenter.empty')}</span></div>`;
+            return;
+        }
+
+        // Group by serviceId
+        const grouped = {};
+        for (const notif of history) {
+            if (!grouped[notif.serviceId]) {
+                const svc = services.find(s => s.id === notif.serviceId) || { name: notif.serviceId, icon: '', favicon: '' };
+                grouped[notif.serviceId] = { service: svc, items: [] };
+            }
+            grouped[notif.serviceId].items.push(notif);
+        }
+
+        for (const groupId in grouped) {
+            const group = grouped[groupId];
+            const groupEl = document.createElement('div');
+            groupEl.className = 'notif-group';
+
+            let iconHtml = '';
+            if (group.service.favicon) {
+                iconHtml = `<img src="${group.service.favicon}" alt="${group.service.name}">`;
+            } else if (group.service.icon && group.service.icon.startsWith('data:')) {
+                iconHtml = `<img src="${group.service.icon}" alt="${group.service.name}">`;
+            } else if (group.service.icon) {
+                iconHtml = `<img src="assets://${group.service.icon}" alt="${group.service.name}">`;
+            } else {
+                iconHtml = group.service.name.charAt(0).toUpperCase();
+            }
+
+            let bgStyle = '';
+            if (!group.service.favicon && !group.service.icon) {
+                bgStyle = `style="background-color: ${getColorForName(group.service.name)}"`;
+            }
+
+            let html = `
+                <div class="notif-group-header">
+                    <div class="notif-group-icon" ${bgStyle}>${iconHtml}</div>
+                    <h4 class="notif-group-name">${group.service.name}</h4>
+                </div>
+                <div class="notif-items">
+            `;
+
+            for (const item of group.items) {
+                const date = new Date(item.timestamp);
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const dateStr = date.toLocaleDateString();
+                const now = new Date();
+                const isToday = date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+
+                html += `
+                    <div class="notif-item" data-service-id="${groupId}">
+                        <p class="notif-item-title">${item.title}</p>
+                        <p class="notif-item-body">${item.body}</p>
+                        <span class="notif-item-time">${isToday ? timeStr : dateStr + ' ' + timeStr}</span>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            groupEl.innerHTML = html;
+
+            // Add click listener to switch to service
+            groupEl.querySelectorAll('.notif-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const sid = el.dataset.serviceId;
+                    const targetSvc = services.find(s => s.id === sid);
+                    if (targetSvc) {
+                        showPanel('webview');
+                        activateService(sid);
+                    }
+                });
+            });
+
+            list.appendChild(groupEl);
+        }
+    }
+
     // ─── Event Listeners ───
     function setupEventListeners() {
         // Window controls
@@ -979,10 +1096,17 @@
         document.getElementById('btn-homescreen-catalog').addEventListener('click', () => showPanel('catalog'));
         document.getElementById('btn-homescreen-explore').addEventListener('click', () => showPanel('catalog'));
 
-        // Catalog
-        document.getElementById('btn-catalog-close').addEventListener('click', () => {
-            showPanel(services.length > 0 ? 'webview' : 'welcome');
+        // Notification Center
+        document.getElementById('btn-notifications').addEventListener('click', () => {
+            document.getElementById('notif-dot').classList.add('hidden');
+            showPanel('notifications');
         });
+        document.getElementById('btn-notifications-clear').addEventListener('click', async () => {
+            await window.rijanbox.db.clearNotifications();
+            await renderNotifications();
+        });
+
+        // Catalog
         document.getElementById('catalog-search-input').addEventListener('input', (e) => {
             const activeTab = document.querySelector('.cat-tab.active');
             const category = activeTab ? activeTab.dataset.category : 'all';
@@ -1261,7 +1385,7 @@
 
         // Activity tracking
         document.addEventListener('mousemove', signalActivity);
-        document.addEventListener('keydown', signalActivity);
+        document.addEventListener('keyup', signalActivity);
 
         // System theme changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {

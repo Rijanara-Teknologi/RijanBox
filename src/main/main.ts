@@ -1,8 +1,9 @@
-import { app, BrowserWindow, globalShortcut, powerMonitor, shell, Menu, protocol, net } from 'electron';
+import { app, BrowserWindow, globalShortcut, powerMonitor, shell, Menu, protocol, net, ipcMain } from 'electron';
 import * as path from 'path';
 import { createTray, destroyTray } from './tray';
 import { registerIpcHandlers } from './ipc-handlers';
 import { store } from './store';
+import { initDatabase, saveNotification, getNotifications, clearNotifications } from './database';
 
 let mainWindow: BrowserWindow | null = null;
 let autoLockTimer: NodeJS.Timeout | null = null;
@@ -43,6 +44,10 @@ function createMainWindow(): BrowserWindow {
         if (!settings.startMinimized) {
             win.show();
         }
+    });
+
+    win.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log(`[Renderer Log] ${message} (line ${line})`);
     });
 
     win.on('close', (e) => {
@@ -167,6 +172,12 @@ function applyDnsConfig(): void {
 
 app.on('ready', () => {
     registerIpcHandlers();
+    initDatabase();
+
+    // Database IPC Handlers for Notifications
+    ipcMain.handle('db:save-notification', (_e, data) => saveNotification(data));
+    ipcMain.handle('db:get-notifications', () => getNotifications());
+    ipcMain.handle('db:clear-notifications', () => clearNotifications());
 
     protocol.handle('assets', (request) => {
         let url = request.url.replace('assets://', '');
@@ -190,6 +201,13 @@ app.on('ready', () => {
                     return { action: 'deny' };
                 }
                 return { action: 'allow' };
+            });
+
+            // Prevent auto-lock when typing inside webviews
+            contents.on('before-input-event', (_e, input) => {
+                if (input.type === 'keyUp' && mainWindow) {
+                    resetAutoLockTimer(mainWindow);
+                }
             });
 
             contents.on('context-menu', (_e, params) => {
@@ -224,7 +242,6 @@ app.on('ready', () => {
     }
 
     // Listen for user activity to reset auto-lock timer
-    const { ipcMain } = require('electron');
     ipcMain.on('user-activity', () => {
         if (mainWindow) resetAutoLockTimer(mainWindow);
     });

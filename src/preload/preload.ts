@@ -46,6 +46,14 @@ contextBridge.exposeInMainWorld('rijanbox', {
             ipcRenderer.invoke('notification:show', data),
     },
 
+    // Database
+    db: {
+        saveNotification: (data: { serviceId: string; title: string; body: string; timestamp: number }) =>
+            ipcRenderer.invoke('db:save-notification', data),
+        getNotifications: () => ipcRenderer.invoke('db:get-notifications'),
+        clearNotifications: () => ipcRenderer.invoke('db:clear-notifications'),
+    },
+
     // Window Controls
     window: {
         minimize: () => ipcRenderer.send('window-control', 'minimize'),
